@@ -36,7 +36,7 @@ export class PostService {
 
   getPostsPreview(filter: string = ""){
     let posts: Post[] = [];
-    for(let i = 0; i < 5; i++){
+    for(let i = 0; i < 12; i++){
       posts.push(this.post);
     }
 

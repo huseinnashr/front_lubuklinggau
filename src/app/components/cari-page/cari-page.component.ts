@@ -1,62 +1,107 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../services/category.service';
 import { MatChipInputEvent, DateAdapter, PageEvent } from '@angular/material';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { Post } from '../../models/Post';
 import { PostService } from '../../services/post.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { Validators } from '@angular/forms/src/validators';
 
 @Component({
   selector: 'app-cari-page',
   templateUrl: './cari-page.component.html',
   styleUrls: ['./cari-page.component.scss'],
 })
-export class CariPageComponent {
+export class CariPageComponent implements OnInit {
 
-  category: string = "1";
+  dateFrom: FormControl
+  dateUntil: FormControl
   separatorKeysCodes = [ENTER, COMMA];
-  keywords: string[] = [];
   filteredPosts: Post[] = [];
   query: SearchQuery = new SearchQuery;
 
-  constructor(public route: Router, private pService: PostService, public cService: CategoryService, private adapter: DateAdapter<any>) { }
+  constructor(public route: ActivatedRoute, private pService: PostService, public cService: CategoryService, private adapter: DateAdapter<any>) { 
+    let paramQuery = route.snapshot.queryParamMap;
+
+  }
+
+  dateFromC(event: MatDatepickerInputEvent<Date>){
+    this.query.dateFrom = `${event.value}`;
+  }
+  dateUntilC(event: MatDatepickerInputEvent<Date>){
+    this.query.dateUntil = `${event.value}`;
+  }
+
+  ngOnInit(){
+    this.loadQuery();
+  }
+
+  loadQuery(){
+    let paramQuery = this.route.snapshot.queryParamMap;
+    this.query.category = paramQuery.get('category');
+    this.query.keywords = paramQuery.getAll('keywords');
+    this.query.onlyAnswered = paramQuery.get('onlyAnswered') == "true";
+    this.query.isDateFiltered = paramQuery.get('isDateFiltered') == "true";
+
+    let dateFrom = paramQuery.get('dateFrom') == null ? new Date() : new Date(+paramQuery.get('dateFrom'));
+    let dateUntil = paramQuery.get('dateUntil') == null ? new Date() : new Date(+paramQuery.get('dateUntil'));
+    this.dateFrom = new FormControl(dateFrom);
+    this.dateUntil = new FormControl(dateUntil);
+
+    if (this.query.isDateFiltered){
+      this.query.dateFrom = `${this.dateFrom.value.getTime()}`;
+      this.query.dateUntil = `${this.dateUntil.value.getTime()}`;
+    }
+
+    if (paramQuery.get('isSearching') == "true")
+      this.onSearch();
+  }
 
   add(event: MatChipInputEvent): void {
     let input = event.input;
     let value = event.value;
 
-    // Add our fruit
     if ((value || '').trim()) {
-      this.keywords.push(value.trim());
+      this.query.keywords.push(value.trim());
     }
 
-    // Reset the input value
     if (input) {
       input.value = '';
     }
   }
 
-  remove(fruit: any): void {
-    let index = this.keywords.indexOf(fruit);
+  remove(item: any): void {
+    let index = this.query.keywords.indexOf(item);
 
     if (index >= 0) {
-      this.keywords.splice(index, 1);
+      this.query.keywords.splice(index, 1);
     }
   }
 
   onSearch() {
-    window.alert((new Date));
     this.filteredPosts = this.pService.getPostsPreview();
   }
 
+  onDateFilterChange(){
+    if (!this.query.isDateFiltered){
+      this.query.dateFrom = null;
+      this.query.dateUntil = null;
+    } else {
+      this.query.dateFrom = `${this.dateFrom.value.getTime()}`;
+      this.query.dateUntil = `${this.dateUntil.value.getTime()}`;
+    }
+  }
+
   getFilteredPosts(event: PageEvent){
-    if (event == null)  return this.filteredPosts.slice(0, 5);
-    return this.filteredPosts.slice(event.pageIndex, event.pageSize);
+    if (event == null)  return this.filteredPosts.slice(0, 10);
+    return this.filteredPosts.slice(event.pageIndex * event.pageSize, (event.pageIndex + 1) * event.pageSize);
   }
 }
 
 class SearchQuery {
+  isSearching: boolean = true;
   category: string;
   keywords: string[];
   onlyAnswered: boolean;
