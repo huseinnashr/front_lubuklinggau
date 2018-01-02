@@ -1,0 +1,21 @@
+.jawabanToolbar {
+  display: inline-flex;
+  width: 100%;
+}
+
+.filler {
+  flex-grow: 1;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.title {
+  margin: 8px 0px; 
+  line-height: 130%;
+}
+
+:host {
+  display: inherit;
+}

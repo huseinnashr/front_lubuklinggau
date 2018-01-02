@@ -1,3 +1,49 @@
-<p>
-  cari-page works!
-</p>
+<div class="mat-display-1" style="margin-bottom:16px">Cari Post</div>
+<div class="filter-container">
+  <mat-form-field class="category">
+      <mat-select [(value)]="query.category"  placeholder="Kategori">
+        <mat-option *ngFor="let cat of cService.getCategories()" value={{cat.id}}>{{cat.name}}</mat-option>
+      </mat-select>
+  </mat-form-field>
+  <mat-form-field class="keyword">
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let keyword of keywords" (remove)="remove(keyword)" [selectable]="false">
+          {{keyword}}
+          <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Kata kunci (5 max)..."
+              [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              [matChipInputAddOnBlur]="addOnBlur"
+              (matChipInputTokenEnd)="add($event)" [disabled]="keywords.length >= 5"/>
+      </mat-chip-list>
+  </mat-form-field>
+  <mat-checkbox [(ngModel)]="onlyAnswered" class="onlyAnswered">Hanya Terjawab</mat-checkbox>
+
+  <mat-checkbox [(ngModel)]="isDateFiltered" class="isDateFiltered">Saring Berdasarkan Tanggal</mat-checkbox>
+  <div *ngIf="isDateFiltered" class="dateFilter">
+    <mat-form-field>
+        <input matInput [matDatepicker]="dpFrom" placeholder="Dari tanggal" [(ngModel)]="query.dateFrom">
+        <mat-datepicker-toggle matSuffix [for]="dpFrom"></mat-datepicker-toggle>
+        <mat-datepicker touchUi="true" #dpFrom></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput [matDatepicker]="dpUntil" placeholder="Sampai tanggal" [(ngModel)]="query.dateUntil">
+        <mat-datepicker-toggle matSuffix [for]="dpUntil"></mat-datepicker-toggle>
+        <mat-datepicker touchUi="true" #dpUntil></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div class="cariBtnContainer" [class.marginTop8px]="!isDateFiltered">
+      <button mat-raised-button color="primary" (click)="onSearch()">Cari</button>
+      <div style="margin: 0px 8px"></div>
+      <button mat-raised-button color="link" [routerLink]="['/cari']" [queryParams]="{s: ['sds', 'sds']}">Cari berdasarkan lokasi</button>
+  </div>
+</div>
+<div class="filteredPostsPreview" >
+  <app-post-preview-item *ngFor="let post of getFilteredPosts(pageEvent)" [post]="post"></app-post-preview-item>
+</div>
+<mat-paginator [length]="filteredPosts.length"
+              [pageSize]="10"
+              [pageSizeOptions]="[5, 10, 25, 100]"
+              (page)="pageEvent = $event">
+</mat-paginator>

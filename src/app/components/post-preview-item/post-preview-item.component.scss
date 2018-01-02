@@ -1,0 +1,48 @@
+:host {
+  display:grid;
+  padding: 12px;
+  grid-row-gap: 2px;
+  grid-template-areas: 
+    "title title icon" 
+    "author info info";
+  grid-template-columns: 100px auto auto;
+  border: 1px solid lightgrey;
+  background-color: white;
+}
+
+.postPreviewTitle {
+  grid-area: title;
+  margin-right: 8px;
+  line-height: 130%;
+}
+.icon {
+  grid-area: icon;
+  justify-self: end;
+}
+.author {
+  grid-area: author;
+}
+
+.infoContainer {
+  grid-area: info;
+  justify-self: end;
+  display: inline-flex;
+}
+
+.info {
+  margin-right: 8px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.text-sm {
+  font-size: small;
+}
+
+@media screen and (min-width: 580px){
+  .text-responsive {
+    font-size: medium;
+  }
+}

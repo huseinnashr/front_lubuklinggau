@@ -1,3 +1,10 @@
-<p>
-  post-preview-item works!
-</p>
+<a class="postPreviewTitle text-responsive mat-body-2" routerLink="/post/{{post.id}}">{{post.title}}</a>
+<div class="icon">
+    <app-post-toolbar [data]="post"></app-post-toolbar>
+</div>
+<div class="author text-sm">{{post.author}}</div>
+<div class="infoContainer text-sm">
+  <div class="info">{{post.address}}</div>
+  <div class="info">{{post.category}}</div>
+  <div class="info">{{post.created_at}}</div>
+</div>

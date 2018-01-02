@@ -1,0 +1,68 @@
+.filter-container {
+  display: grid;
+}
+
+@media screen and (max-width: 1100px){
+  .filter-container {
+    grid-template-areas: 
+      "category" 
+      "keyword"
+      "onlyAnswered"
+      "isDateFiltered"
+      "dateFilter"
+      "cariBtnContainer";
+  }
+}
+
+@media screen and (min-width: 1100px){
+  .filter-container {
+    grid-template-areas: 
+      "category onlyAnswered" 
+      "category isDateFiltered" 
+      "keyword dateFilter"
+      "cariBtnContainer cariBtnContainer  ";
+
+      grid-template-columns: 50% 50%;
+      grid-column-gap: 16px;
+  }
+}
+
+.category {
+  grid-area: category;
+}
+
+.keyword {
+  grid-area: keyword;
+}
+
+.onlyAnswered {
+  grid-area: onlyAnswered;
+}
+
+.isDateFiltered {
+  grid-area: isDateFiltered;
+}
+
+.dateFilter {
+  grid-area: dateFilter;
+  margin-top: 6px;
+}
+
+.cariBtnContainer {
+  display: inline-flex;
+  grid-area: cariBtnContainer;
+}
+
+@media screen and (max-width: 760px){
+  .marginTop8px {
+    margin-top: 8px;
+  }
+}
+
+.filteredPostsPreview {
+  margin: 16px 0px;
+}
+
+mat-paginator {
+  margin-bottom: 36px;
+}

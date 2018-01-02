@@ -1,3 +1,13 @@
-<p>
-  post-toolbar works!
-</p>
+<mat-icon [class.notActive]="!post.isAnswered">check_circle</mat-icon> 
+<div style="display:inline-flex">
+  <mat-icon [class.notActive]="!post.isFollowed" (click)="onFollowed()" class="pointer">star</mat-icon>
+  <div class="mat-body-1" style="line-height: 200%">{{post.followers + post.isFollowed}}</div>
+  
+</div>
+<mat-icon (click)="onReported()" class="pointer">flag</mat-icon> 
+<div *ngIf="isShown" style="display:inherit; width: 100%">
+  <mat-icon (click)="onDisposisi()" class="pointer">import_export</mat-icon> 
+  <mat-icon (click)="onSetting()" class="pointer">settings</mat-icon> 
+  <div class="filler"></div>
+  <mat-icon (click)="onDelete()" class="pointer">delete_forever</mat-icon> 
+</div>

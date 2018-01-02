@@ -1,0 +1,16 @@
+.notActive {
+  color: lightgray;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+:host {
+  display: inline-flex;
+  width:100%;
+}
+
+.filler {
+  flex-grow: 1;
+}

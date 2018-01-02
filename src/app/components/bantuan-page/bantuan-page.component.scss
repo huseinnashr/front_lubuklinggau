@@ -1,0 +1,18 @@
+.HelpPanel {
+  display: grid;
+  grid-gap: 10px;
+}
+
+.help-icon {
+  grid-template-columns: 48px auto;
+}
+
+.help-post {
+  grid-template-columns: 16px auto;
+}
+
+.icon-small {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}

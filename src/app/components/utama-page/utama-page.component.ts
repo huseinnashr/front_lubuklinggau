@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Post } from '../../models/Post';
+import { PostService } from '../../services/post.service';
 
 @Component({
   selector: 'app-utama-page',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UtamaPageComponent implements OnInit {
 
-  constructor() { }
+  public posts: Post[];
+
+  constructor(private pService: PostService) { }
 
   ngOnInit() {
+    this.posts = this.pService.getPostsPreview();
   }
 
 }
