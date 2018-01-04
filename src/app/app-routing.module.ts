@@ -6,16 +6,32 @@ import { TambahPostPageComponent } from './components/tambah-post-page/tambah-po
 import { MasukPageComponent } from './components/masuk-page/masuk-page.component';
 import { DaftarPageComponent } from './components/daftar-page/daftar-page.component';
 import { BantuanPageComponent } from './components/bantuan-page/bantuan-page.component';
+import { PostDetailPageComponent } from './components/post-detail-page/post-detail-page.component';
 import { PostPageComponent } from './components/post-page/post-page.component';
+import { ProfilePageComponent } from './components/profile-page/profile-page.component';
+import { ManageAdminPageComponent } from './components/manage-admin-page/manage-admin-page.component';
+import { TambahJawabanPageComponent } from './components/tambah-jawaban-page/tambah-jawaban-page.component';
+import { EditJawabanPageComponent } from './components/edit-jawaban-page/edit-jawaban-page.component';
+import { EditPostPageComponent } from './components/edit-post-page/edit-post-page.component';
+import { AuthGuard, AdminGuard } from './_guards/index';
+import { NotfoundPageComponent } from './components/notfound-page/notfound-page.component';
 
 const routes: Routes = [
   { path: '', component: UtamaPageComponent },
-  { path: 'cari', component: CariPageComponent },
-  { path: 'tambah-pertanyaan', component: TambahPostPageComponent },
+  { path: 'cari', component: CariPageComponent, },
   { path: 'masuk', component: MasukPageComponent },
   { path: 'daftar', component: DaftarPageComponent },
+  { path: 'profil', component: ProfilePageComponent, canActivate: [AdminGuard]},
+  { path: 'kelola-admin', component: ManageAdminPageComponent, canActivate: [AdminGuard] },
   { path: 'bantuan', component: BantuanPageComponent },
-  { path: 'post/:id', component: PostPageComponent }
+  { path: 'post/tambah', component: TambahPostPageComponent, canActivate: [AuthGuard]},
+  { path: 'post/:category', component: PostPageComponent },
+  { path: 'post/:category/:id', component: PostDetailPageComponent },
+  { path: 'post/:category/:id/edit', component: EditPostPageComponent, canActivate: [AuthGuard] },
+  { path: 'post/:category/:id/jawaban/tambah', component: TambahJawabanPageComponent, canActivate: [AdminGuard] },
+  { path: 'post/:category/:id/jawaban/edit', component: EditJawabanPageComponent, canActivate: [AdminGuard] },
+  { path: '404', component: NotfoundPageComponent },
+  { path: '**', redirectTo: '404' }
 ];
 
 @NgModule({

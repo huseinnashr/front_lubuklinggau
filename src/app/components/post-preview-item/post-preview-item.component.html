@@ -1,4 +1,4 @@
-<a class="postPreviewTitle text-responsive mat-body-2" routerLink="/post/{{post.id}}">{{post.title}}</a>
+<a class="postPreviewTitle text-responsive mat-body-2" routerLink="/post/{{post.category}}/{{post.id}}">{{post.title | titlecase}}</a>
 <div class="icon">
     <app-post-toolbar [data]="post"></app-post-toolbar>
 </div>

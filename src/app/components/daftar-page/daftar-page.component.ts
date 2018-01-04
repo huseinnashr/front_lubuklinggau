@@ -31,4 +31,8 @@ export class DaftarPageComponent {
   nik: string;
   password: string;
 
+  onDaftar(){
+    
+  }
+
 }

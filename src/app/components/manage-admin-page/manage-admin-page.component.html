@@ -1,0 +1,45 @@
+<div class="mat-display-1" #el>Kelola Admin</div>
+<mat-card>
+  <div class="mat-headline" *ngIf="!isEditing">Tambah</div>
+  <div class="mat-headline" *ngIf="isEditing">Edit</div>
+  <div class="tambah-container">
+      <mat-form-field class="field-a">
+          <input matInput placeholder="Email" minlength="4" type="email" [formControl]="emailFormControl" required>
+          <mat-error *ngIf="(emailFormControl.hasError('email') || emailFormControl.hasError('required'))">
+              Alamat email <strong>diperlukan</strong> dengan format email@domain.com
+          </mat-error>
+      </mat-form-field>
+      <mat-form-field class="category">
+          <mat-select [(value)]="category"  placeholder="Kategori" required>
+            <mat-option *ngFor="let cat of categories" value={{cat.id}}>{{cat.name}}</mat-option>
+          </mat-select>
+      </mat-form-field>
+      <div>
+        <a *ngIf="!isEditing" mat-raised-button color="primary" (click)="onAddAdmin(emailFormControl.value, category)" [disabled]="!(emailFormControl.valid)" class="admin-btn">Tambah</a>
+        <a *ngIf="isEditing" mat-raised-button color="primary" (click)="onEditAdmin(emailFormControl.value, category)" class="admin-btn">Edit</a>
+        <a *ngIf="isEditing" mat-raised-button (click)="onCloseEditMode()" class="admin-btn">Batal</a>
+      </div>
+  </div>
+</mat-card>
+
+<div class="mat-headline">Daftar</div>
+<div class="daftar-admin-container">
+  <mat-card *ngFor="let admin of admins" class="daftar-admin-item">
+      <div style="text-align: center; font-size: 16px">{{admin.email}}</div>
+      <div style="text-align: center; font-size: 16px">{{admin.category}}</div>
+      <div class="toolbar">
+        <button mat-icon-button (click)="onDeleteAdmin(admin.email)"><mat-icon>close</mat-icon></button>
+        <button mat-icon-button (click)="editModeOn(el, admin.email, admin.category)"><mat-icon>edit</mat-icon></button>
+      </div>
+  </mat-card>
+</div>
+<div class="mat-headline">Admin Kominfo Lain</div>
+<div class="daftar-admin-container" style="margin-bottom: 36px;">
+  <mat-card *ngFor="let admin of adService.getKominfoAdmins()" class="daftar-admin-item">
+      <div style="text-align: center; font-size: 16px">{{admin.email}}</div>
+      <div class="toolbar" *ngIf="isSuperUser">
+          <button mat-icon-button (click)="onDeleteAdmin(admin.email)"><mat-icon>close</mat-icon></button>
+          <button mat-icon-button (click)="editModeOn(el, admin.email, 'Umum')"><mat-icon>edit</mat-icon></button>
+      </div>
+  </mat-card>
+</div>

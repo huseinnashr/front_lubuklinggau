@@ -1,0 +1,18 @@
+<app-post-toolbar [data]="post" [isShown]="true"></app-post-toolbar>
+<div class="title mat-title">{{post.title | titlecase}}</div>
+<div class="mat-body-1">{{post.body}}</div>
+
+<div class="mat-headline" style="margin: 16px 0px 8px 0px">Jawaban</div>
+<div *ngIf="reply != null; else notfound">
+  <div *ngIf="reply.hasAccess" class="jawabanToolbar">
+      <mat-icon (click)="onJSetting()" class="pointer" routerLink="jawaban/edit">settings</mat-icon> 
+      <div class="filler"></div>
+      <mat-icon (click)="onJDelete()" class="pointer">delete_forever</mat-icon> 
+  </div>
+  <div class="mat-body-1">{{reply.body}}</div>
+</div>
+
+<ng-template #notfound>
+  <div class="mat-subheading-1">Belum dijawab</div>
+  <a mat-raised-button *ngIf="post.hasAccess" mat-button-raised color="primary" routerLink="jawaban/tambah">Jawab</a>
+</ng-template>

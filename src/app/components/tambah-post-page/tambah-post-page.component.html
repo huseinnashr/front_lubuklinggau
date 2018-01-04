@@ -1,3 +1,31 @@
-<p>
-  tambah-post-page works!
-</p>
+<div class="mat-display-1" style="margin-bottom:16px">Tambah Post</div>
+<mat-card class="add-post-container">
+  <mat-form-field class="title">
+    <input matInput placeholder="Judul" minlength="15" type="text" [formControl]="titleFormControl" required>
+    <mat-error *ngIf="titleFormControl.hasError('required') || titleFormControl.hasError('minlength')">
+        Judul <strong>diperlukan</strong> dengan panjang minimum 15 karakter.
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="keyword">
+    <mat-chip-list #chipList>
+      <mat-chip *ngFor="let keyword of keywords" (remove)="remove(keyword)" [selectable]="true">
+        {{keyword}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Kata kunci (butuh 5)..."
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="true"
+            (matChipInputTokenEnd)="add($event)" [disabled]="keywords.length >= 5"/>
+    </mat-chip-list>
+  </mat-form-field>
+  <mat-form-field class="description">
+    <textarea matInput placeholder="Deskripsi" matTextareaAutosize matAutosizeMinRows="10"></textarea>
+  </mat-form-field>
+
+  <div class="add-btn-container">
+      <button mat-raised-button color="primary" (click)="onTambahPost()" [disabled]="!titleFormControl.valid || keywords.length < 5">Tambah</button>
+      <div style="margin: 0px 8px"></div>
+      <button mat-raised-button color="link" [disabled]="!titleFormControl.valid || keywords.length < 5">Tambah dengan lokasi</button>
+  </div>
+</mat-card>

@@ -2,13 +2,13 @@
     <h1 class="mat-headline">Masuk</h1>
     <div class="auth-fields-container">
         <mat-form-field class="field-a">
-          <input matInput placeholder="Email" minlength="4" [(ngModel)]="email" type="email" [formControl]="emailFormControl" required>
+          <input matInput placeholder="Email" minlength="4" type="email" [formControl]="emailFormControl" required>
           <mat-error *ngIf="emailFormControl.hasError('email') || emailFormControl.hasError('required')">
               Alamat email <strong>diperlukan</strong> dengan format email@domain.com
           </mat-error>
         </mat-form-field>
         <mat-form-field class="field-a">
-          <input matInput placeholder="Password" [(ngModel)]="password" type="password" [formControl]="passwordFormControl" required>
+          <input matInput placeholder="Password" type="password" [formControl]="passwordFormControl" required>
           <mat-error *ngIf="passwordFormControl.hasError('minlength') || passwordFormControl.hasError('required')">
               Panjang Password minimal <strong>5</strong> karakter
           </mat-error>

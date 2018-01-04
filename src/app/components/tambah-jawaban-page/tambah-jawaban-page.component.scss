@@ -1,0 +1,35 @@
+.add-jawaban-container {
+  display: grid;
+}
+
+@media screen and (max-width: 760px){
+  .add-jawaban-container {
+    grid-template-areas: 
+      "title"
+      "jawaban"
+      "button";
+  }
+}
+
+@media screen and (min-width: 760px){
+  .add-jawaban-container {
+    grid-template-areas: 
+      "title "
+      "jawaban "
+      "button ";
+    grid-column-gap: 16px;
+  }
+}
+
+.title {
+  grid-area: title;
+}
+
+.jawaban {
+  grid-area: jawaban;
+}
+
+.add-btn-container{
+  display: inline-flex;
+  grid-area: button;
+}

@@ -13,6 +13,7 @@ export class PostService {
       id: "1",
       title: "Apakah ada subsidi untuk pembelian panel surya?",
       author: "Husein",
+      keywords: [ "energi", "sumber daya terbarukan", "subsidi", "pembelian", "harga"],
       hasAccess: true,
       isAnswered: true,
       isFollowed: true,
@@ -20,7 +21,7 @@ export class PostService {
       followers: 20,
       flaggers: null,
       address: "Jl Bakti",
-      category: "Umum",
+      category: "umum",
       created_at: "17-12-2017",
       location: { lat: 124, lng: 234 },
       body: "A rainbow is a meteorological phenomenon that is caused by reflection, refraction and dispersion of light in water droplets resulting in a spectrum of light appearing in the sky. It takes the form of a multicoloured circular arc. Rainbows caused by sunlight always appear in the section of sky directly opposite the sun."
@@ -34,7 +35,7 @@ export class PostService {
     }
   }
 
-  getPostsPreview(filter: string = ""){
+  getPostsPreview(filter: object = {}){
     let posts: Post[] = [];
     for(let i = 0; i < 12; i++){
       posts.push(this.post);
@@ -43,6 +44,12 @@ export class PostService {
     // return this.http.get('https://jsonplaceholder.typicode.com/posts')
     //   .map(res => res.json());
     return posts;
+  }
+
+  getPostsPreviewLength(filter: object = {}){
+    // return this.http.get('https://jsonplaceholder.typicode.com/posts')
+    //   .map(res => res.json());
+    return 12;
   }
 
   getPostById(postId: string){

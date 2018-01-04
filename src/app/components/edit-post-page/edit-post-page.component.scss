@@ -1,0 +1,40 @@
+.add-post-container {
+  display: grid;
+}
+
+@media screen and (max-width: 760px){
+  .add-post-container {
+    grid-template-areas: 
+      "title"
+      "keyword"
+      "description"
+      "button";
+  }
+}
+
+@media screen and (min-width: 760px){
+  .add-post-container {
+    grid-template-areas: 
+      "title keyword"
+      "description description"
+      "button button";
+    grid-column-gap: 16px;
+  }
+}
+
+.title {
+  grid-area: title;
+}
+
+.keyword {
+  grid-area: keyword;
+}
+
+.description {
+  grid-area: description;
+}
+
+.edit-btn-container{
+  display: inline-flex;
+  grid-area: button;
+}

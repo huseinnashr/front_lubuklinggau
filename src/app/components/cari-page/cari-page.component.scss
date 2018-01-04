@@ -2,28 +2,29 @@
   display: grid;
 }
 
-@media screen and (max-width: 1100px){
+@media screen and (max-width: 1170px){
   .filter-container {
     grid-template-areas: 
       "category" 
       "keyword"
-      "onlyAnswered"
-      "isDateFiltered"
+      "followed"
+      "answered"
+      "datefilter"
       "dateFilter"
       "cariBtnContainer";
   }
 }
 
-@media screen and (min-width: 1100px){
+@media screen and (min-width: 1170px){
   .filter-container {
     grid-template-areas: 
-      "category onlyAnswered" 
-      "category isDateFiltered" 
-      "keyword dateFilter"
-      "cariBtnContainer cariBtnContainer  ";
+      "category followed answered" 
+      "category datefilter datefilter" 
+      "keyword dateFilter dateFilter"
+      "cariBtnContainer cariBtnContainer cariBtnContainer";
 
-      grid-template-columns: 50% 50%;
-      grid-column-gap: 16px;
+    grid-template-columns: 50% 27% 23%;
+    grid-column-gap: 16px;
   }
 }
 
@@ -35,12 +36,16 @@
   grid-area: keyword;
 }
 
-.onlyAnswered {
-  grid-area: onlyAnswered;
+.answered {
+  grid-area: answered;
 }
 
-.isDateFiltered {
-  grid-area: isDateFiltered;
+.followed {
+  grid-area: followed;
+}
+
+.datefilter {
+  grid-area: datefilter;
 }
 
 .dateFilter {
@@ -53,7 +58,7 @@
   grid-area: cariBtnContainer;
 }
 
-@media screen and (max-width: 760px){
+@media screen and (max-width: 1170px){
   .marginTop8px {
     margin-top: 8px;
   }

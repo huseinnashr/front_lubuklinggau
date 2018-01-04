@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
+import { AuthService } from '../../services/index';
 
 @Component({
   selector: 'app-masuk-page',
@@ -17,7 +18,14 @@ export class MasukPageComponent {
     Validators.minLength(6),
   ]);
 
-  email: string;
-  password: string;
+  constructor(
+    private aService: AuthService
+  ){}
 
+  onMasuk(){
+    this.aService.login(
+      this.emailFormControl.value,
+      this.passwordFormControl.value,
+    );
+  }
 }

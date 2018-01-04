@@ -2,6 +2,7 @@ export interface Post {
   id: string,
   title: string,
   author: string,
+  keywords?: string[],
   hasAccess: boolean,
   isAnswered: boolean,
   isFollowed: boolean,

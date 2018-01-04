@@ -1,5 +1,5 @@
 <div class="mat-display-1" style="margin-bottom:16px">Cari Post</div>
-<div class="filter-container">
+<mat-card class="filter-container">
   <mat-form-field class="category">
       <mat-select [(value)]="query.category"  placeholder="Kategori">
         <mat-option>-- None --</mat-option>
@@ -15,35 +15,37 @@
         <input placeholder="Kata kunci (5 max)..."
               [matChipInputFor]="chipList"
               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              [matChipInputAddOnBlur]="addOnBlur"
+              [matChipInputAddOnBlur]="true"
               (matChipInputTokenEnd)="add($event)" [disabled]="query.keywords.length >= 5"/>
       </mat-chip-list>
   </mat-form-field>
-  <mat-checkbox [(ngModel)]="query.onlyAnswered" class="onlyAnswered">Hanya Terjawab</mat-checkbox>
-  <mat-checkbox [(ngModel)]="query.isDateFiltered" class="isDateFiltered" (change)="onDateFilterChange()">Saring Berdasarkan Tanggal</mat-checkbox>
-  <div *ngIf="query.isDateFiltered" class="dateFilter">
+  <mat-checkbox [(ngModel)]="query.followed" class="followed">Hanya Diikuti</mat-checkbox>
+  <mat-checkbox [(ngModel)]="query.answered" class="answered">Hanya Terjawab</mat-checkbox>
+  <mat-checkbox [(ngModel)]="query.datefilter" class="datefilter">Saring Berdasarkan Tanggal</mat-checkbox>
+  <div *ngIf="query.datefilter" class="dateFilter">
     <mat-form-field>
-        <input matInput [max]="dateUntil?.value" [matDatepicker]="dpFrom" placeholder="Dari tanggal" [formControl]="dateFrom" (dateChange)="dateFromC($event)">
+        <input matInput [max]="dateUntil?.value" [matDatepicker]="dpFrom" placeholder="Dari tanggal" [formControl]="dateFrom">
         <mat-datepicker-toggle matSuffix [for]="dpFrom"></mat-datepicker-toggle>
         <mat-datepicker touchUi="true" #dpFrom></mat-datepicker>
     </mat-form-field>
     <mat-form-field>
-        <input matInput [matDatepicker]="dpUntil" placeholder="Sampai tanggal" [formControl]="dateUntil" (dateChange)="dateUntilC($event)">
+        <input matInput [matDatepicker]="dpUntil" placeholder="Sampai tanggal" [formControl]="dateUntil">
         <mat-datepicker-toggle matSuffix [for]="dpUntil"></mat-datepicker-toggle>
         <mat-datepicker touchUi="true" #dpUntil></mat-datepicker>
     </mat-form-field>
   </div>
-  <div class="cariBtnContainer" [class.marginTop8px]="!query.isDateFiltered">
-      <button mat-raised-button color="primary" (click)="onSearch()" [routerLink]="['/cari']" [queryParams]="query">Cari</button>
+  <div class="cariBtnContainer" [class.marginTop8px]="!query.datefilter">
+      <button mat-raised-button color="primary" (click)="onSearch()">Cari</button>
       <div style="margin: 0px 8px"></div>
       <button mat-raised-button color="link">Cari berdasarkan lokasi</button>
   </div>
-</div>
+</mat-card>
 <div class="filteredPostsPreview" >
-  <app-post-preview-item *ngFor="let post of getFilteredPosts(pageEvent)" [post]="post"></app-post-preview-item>
+  <app-post-preview-item *ngFor="let post of filteredPosts" [post]="post"></app-post-preview-item>
 </div>
-<mat-paginator [length]="filteredPosts.length"
-              [pageSize]="10"
+<mat-paginator [length]="resultlength"
+              [pageSize]="query.size"
               [pageSizeOptions]="[5, 10, 25, 100]"
-              (page)="pageEvent = $event">
+              [pageIndex]="query.page"
+              (page)="pageEvent($event)">
 </mat-paginator>
