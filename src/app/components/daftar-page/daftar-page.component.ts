@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { AuthService } from '../../services/index';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-daftar-page',
@@ -23,7 +25,7 @@ export class DaftarPageComponent {
   
   passwordFormControl = new FormControl('', [
     Validators.required,
-    Validators.minLength(6),
+    Validators.minLength(5),
   ]);
 
   nama: string;
@@ -31,8 +33,22 @@ export class DaftarPageComponent {
   nik: string;
   password: string;
 
+  constructor(
+    private aService: AuthService, 
+    private navigator: Router
+  ) {}
+
   onDaftar(){
-    
+    this.aService.register(
+      this.namaFormControl.value, 
+      this.emailFormControl.value,
+      this.nikFormControl.value, 
+      this.passwordFormControl.value
+    ).subscribe(result => {
+        if (result === true) {
+            this.navigator.navigate(['/']);
+        };
+    });
   }
 
 }

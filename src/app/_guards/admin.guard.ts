@@ -10,7 +10,7 @@ export class AdminGuard implements CanActivate {
 
     canActivate() {
         let currentUser = this.aService.getCurrentUser();
-        if (currentUser && currentUser.type < USER_TYPE.REGULAR) { 
+        if (currentUser && currentUser.usertype.id < USER_TYPE.REGULAR) { 
           // logged in so return true
           return true;
         }

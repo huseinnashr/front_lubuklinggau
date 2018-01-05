@@ -3,28 +3,31 @@
     <div class="auth-fields-container">
 
         <mat-form-field class="field-a">
-          <input matInput placeholder="Nama Lengkap" [(ngModel)]="nama" type="text" [formControl]="namaFormControl" required>
+          <input matInput placeholder="Nama Lengkap" type="text" [formControl]="namaFormControl" required>
           <mat-error *ngIf="namaFormControl.hasError('required')">
               Nama lengkap <strong>diperlukan</strong>
           </mat-error>
         </mat-form-field>
 
         <mat-form-field class="field-a">
-            <input matInput placeholder="Email" minlength="4" [(ngModel)]="email" type="email" [formControl]="emailFormControl" required>
-            <mat-error *ngIf="emailFormControl.hasError('email') || emailFormControl.hasError('required')">
-                Alamat email <strong>diperlukan</strong> dengan format email@domain.com
+            <input matInput placeholder="Email" minlength="4" type="email" [formControl]="emailFormControl" required>
+            <mat-error *ngIf="emailFormControl.hasError('required')">
+                Alamat email <strong>diperlukan</strong>.
+            </mat-error>
+            <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+                Format Salah. Yang benar <strong>email@domain.com</strong>.
             </mat-error>
         </mat-form-field>
 
         <mat-form-field class="field-a">
-          <input matInput placeholder="NIK" [(ngModel)]="nik" type="text" [formControl]="nikFormControl" required>
+          <input matInput placeholder="NIK" type="text" [formControl]="nikFormControl" required>
           <mat-error *ngIf="nikFormControl.hasError('pattern') || nikFormControl.hasError('required')">
             NIK <strong>diperlukan</strong> dengan format yang benar
           </mat-error>
         </mat-form-field>
 
         <mat-form-field class="field-a">
-            <input matInput placeholder="Password" [(ngModel)]="password" type="password" [formControl]="passwordFormControl" required>
+            <input matInput placeholder="Password" type="password" [formControl]="passwordFormControl" required>
             <mat-error *ngIf="passwordFormControl.hasError('minlength')">
                 Panjang Password minimal <strong>5</strong> karakter
             </mat-error>

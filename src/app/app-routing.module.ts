@@ -13,14 +13,14 @@ import { ManageAdminPageComponent } from './components/manage-admin-page/manage-
 import { TambahJawabanPageComponent } from './components/tambah-jawaban-page/tambah-jawaban-page.component';
 import { EditJawabanPageComponent } from './components/edit-jawaban-page/edit-jawaban-page.component';
 import { EditPostPageComponent } from './components/edit-post-page/edit-post-page.component';
-import { AuthGuard, AdminGuard } from './_guards/index';
+import { AuthGuard, AdminGuard, AlreadyAuthGuard } from './_guards/index';
 import { NotfoundPageComponent } from './components/notfound-page/notfound-page.component';
 
 const routes: Routes = [
   { path: '', component: UtamaPageComponent },
   { path: 'cari', component: CariPageComponent, },
-  { path: 'masuk', component: MasukPageComponent },
-  { path: 'daftar', component: DaftarPageComponent },
+  { path: 'masuk', component: MasukPageComponent, canActivate: [AlreadyAuthGuard] },
+  { path: 'daftar', component: DaftarPageComponent, canActivate: [AlreadyAuthGuard] },
   { path: 'profil', component: ProfilePageComponent, canActivate: [AdminGuard]},
   { path: 'kelola-admin', component: ManageAdminPageComponent, canActivate: [AdminGuard] },
   { path: 'bantuan', component: BantuanPageComponent },

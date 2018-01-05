@@ -2,7 +2,7 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { AuthService } from './services/index';
 import { Subscription } from 'rxjs/Subscription';
-import { AuthData, USER_TYPE } from './models/index';
+import { USER_TYPE } from './models/index';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 
 export class AppComponent { 
-  authData: AuthData = new AuthData();
+  authData: { usertype: USER_TYPE };
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
   private authListener: Subscription;
@@ -28,7 +28,8 @@ export class AppComponent {
     this.mobileQuery = media.matchMedia('(max-width: 760px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
-    this.authListener = aService.authChange.subscribe((authData) => this.authData = authData);
+    this.authData = aService.getCurrentUser();
+    this.authListener = aService.authChange.subscribe(() => { this.authData = aService.getCurrentUser(); });
   }
 
   ngOnDestroy(): void {
@@ -37,8 +38,9 @@ export class AppComponent {
   }
 
   onLogout(){
-    this.aService.logout();
-    this.navigator.navigate(['']);
+    this.aService.logout(() => {
+      this.navigator.navigate(['']);
+    });
   }
 }
 

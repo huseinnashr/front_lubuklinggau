@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/Http';
 
 import { AppComponent } from './app.component';
 import { BantuanPageComponent } from './components/bantuan-page/bantuan-page.component';
@@ -31,9 +30,10 @@ import { ManageAdminPageComponent } from './components/manage-admin-page/manage-
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 import { UserService, PostService, CategoryService, AuthService } from './services';
-import { AuthGuard, AdminGuard, AlreadyAuth } from './_guards/index';
+import { AuthGuard, AdminGuard, AlreadyAuthGuard } from './_guards/index';
 import { NotfoundPageComponent } from './components/notfound-page/notfound-page.component';
 import { AdminService } from './services/admin.service';
+import { HttpClientModule }    from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -64,7 +64,7 @@ import { AdminService } from './services/admin.service';
     BrowserAnimationsModule,
     MaterialModule,
     HttpModule,
-    MatMomentDateModule
+    HttpClientModule,
   ],
   providers: [ 
     PostService, 
@@ -74,7 +74,7 @@ import { AdminService } from './services/admin.service';
     AuthService,
     UserService,
     AuthGuard,
-    AlreadyAuth,
+    AlreadyAuthGuard,
     AdminGuard,
     AdminService,
    ],

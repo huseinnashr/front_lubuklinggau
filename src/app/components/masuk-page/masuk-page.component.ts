@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { AuthService } from '../../services/index';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-masuk-page',
@@ -15,17 +16,20 @@ export class MasukPageComponent {
   ]);  
   
   passwordFormControl = new FormControl('', [
-    Validators.minLength(6),
+    Validators.minLength(5),
   ]);
 
   constructor(
-    private aService: AuthService
+    private aService: AuthService,
+    private navigator: Router,
   ){}
 
   onMasuk(){
-    this.aService.login(
-      this.emailFormControl.value,
-      this.passwordFormControl.value,
-    );
+    this.aService.login(this.emailFormControl.value, this.passwordFormControl.value)
+      .subscribe(result => {
+        if (result === true) {
+            this.navigator.navigate(['/']);
+        };
+    });
   }
 }

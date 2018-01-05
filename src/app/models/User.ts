@@ -1,5 +1,5 @@
 export enum USER_TYPE {
   SUPERUSER,
   ADMIN,
-  REGULAR,
+  REGULAR = 99,
 }
