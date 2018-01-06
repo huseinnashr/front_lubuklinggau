@@ -23,5 +23,5 @@
 
 <ng-template #notfound>
   <div class="mat-subheading-1" *ngIf="!canAnswer">Belum dijawab</div>
-  <a mat-raised-button *ngIf="canAnswer" mat-button-raised color="primary" routerLink="jawaban/tambah">Jawab</a>
+  <a mat-raised-button *ngIf="checkCanAnswer()" mat-button-raised color="primary" routerLink="jawaban/tambah">Jawab</a>
 </ng-template>

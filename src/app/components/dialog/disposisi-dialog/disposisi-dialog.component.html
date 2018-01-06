@@ -1,6 +1,6 @@
 <mat-form-field style="width:100%">
   <mat-select [value]="data?.dinas"  placeholder="Dinas" #select>
-    <mat-option *ngFor="let dinas of cService.getDinas()" value={{dinas.id}}>{{dinas.name}}</mat-option>
+    <mat-option *ngFor="let dinas of dinasList" value={{dinas.id}}>{{dinas.name}}</mat-option>
   </mat-select>
 </mat-form-field>
 <div style="display:inline-flex">

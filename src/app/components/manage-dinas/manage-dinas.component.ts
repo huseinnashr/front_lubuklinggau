@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { CategoryService } from '../../services/index';
 import { MatDialog } from '@angular/material';
 import { Dinas } from '../../models/index';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-manage-dinas',
   templateUrl: './manage-dinas.component.html',
   styleUrls: ['./manage-dinas.component.scss']
 })
-export class ManageDinasComponent implements OnInit {
+export class ManageDinasComponent implements OnInit, OnDestroy {
 
   isEditing: boolean;
   dinasId: number;
@@ -19,6 +20,7 @@ export class ManageDinasComponent implements OnInit {
     Validators.required,
     Validators.minLength(4),
   ]);  
+  private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(
     private cService: CategoryService,
@@ -26,7 +28,9 @@ export class ManageDinasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.cService.getDinas().subscribe(
+    this.cService.getDinas()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
       (dinas) => {
         this.dinas = dinas;
       }, (e) => { console.log(e); },
@@ -38,9 +42,13 @@ export class ManageDinasComponent implements OnInit {
       data: { description: `Dinas yang telah ditambahkan tidak bisa dihapus! Yakin ingin menambahkan?`, action: 'Yakin' },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(result => {
       if (result){
-        this.cService.addDinas(name).subscribe(
+        this.cService.addDinas(name)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(
           (result) => {
             this.formControl.reset();
             this.dinas.push(result);
@@ -58,9 +66,11 @@ export class ManageDinasComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result){
-        this.cService.updateDinas(id, name).subscribe(
+        this.cService.updateDinas(id, name)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(
           (result) => {
-            this.formControl.reset();
+            this.onCloseEditMode();
             let index = this.cService.findIndex(id, this.dinas);
             this.dinas[index].name = name; 
           }, (e) => { console.log(e); },
@@ -79,5 +89,10 @@ export class ManageDinasComponent implements OnInit {
     this.formControl.setValue(name);
     this.dinasId = id;
     this.isEditing = true;
+  }
+
+  ngOnDestroy(){
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

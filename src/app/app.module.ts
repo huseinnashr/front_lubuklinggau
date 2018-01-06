@@ -33,8 +33,7 @@ import { UserService, PostService, CategoryService, AuthService } from './servic
 import { AuthGuard, AdminGuard, AlreadyAuthGuard } from './_guards/index';
 import { NotfoundPageComponent } from './components/notfound-page/notfound-page.component';
 import { AdminService } from './services/admin.service';
-import { HttpClientModule }    from '@angular/common/http';
-import { HttpModule } from '@angular/Http';
+import { HttpModule } from '@angular/http';
 import { DisposisiDialogComponent } from './components/dialog/disposisi-dialog/disposisi-dialog.component';
 import { ManageCategoryComponent } from './components/manage-category/manage-category.component';
 import { ManageDinasComponent } from './components/manage-dinas/manage-dinas.component';

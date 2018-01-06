@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../../services/index';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-daftar-page',
   templateUrl: './daftar-page.component.html',
   styleUrls: ['./daftar-page.component.scss']
 })
-export class DaftarPageComponent {
+export class DaftarPageComponent implements OnDestroy{
   namaFormControl = new FormControl('', [
     Validators.required,
   ]);
@@ -33,6 +34,8 @@ export class DaftarPageComponent {
   nik: string;
   password: string;
 
+  private ngUnsubscribe: Subject<any> = new Subject();
+
   constructor(
     private aService: AuthService, 
     private navigator: Router
@@ -44,11 +47,17 @@ export class DaftarPageComponent {
       this.emailFormControl.value,
       this.nikFormControl.value, 
       this.passwordFormControl.value
-    ).subscribe(result => {
+    )
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(result => {
         if (result === true) {
             this.navigator.navigate(['/']);
         };
     });
   }
-
+  
+  ngOnDestroy(){
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
 }

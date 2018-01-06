@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { CategoryService, PostService } from '../../services/index';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-tambah-post-page',
   templateUrl: './tambah-post-page.component.html',
   styleUrls: ['./tambah-post-page.component.scss']
 })
-export class TambahPostPageComponent implements OnInit {
+export class TambahPostPageComponent implements OnInit, OnDestroy {
   
   titleFormControl = new FormControl('', [
     Validators.required,
@@ -16,6 +17,7 @@ export class TambahPostPageComponent implements OnInit {
   ]);
   category: string;
   description: string;
+  private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(
     public cService: CategoryService,
@@ -29,7 +31,9 @@ export class TambahPostPageComponent implements OnInit {
   onTambahPost(){
     this.pService.addPost(
       this.titleFormControl.value, this.category, this.description
-    ).subscribe(
+    )
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
       (postId) => {
         if (postId != -1){
           this.navigator.navigate([`/post/${postId}`]);
@@ -39,5 +43,9 @@ export class TambahPostPageComponent implements OnInit {
         console.log('Error tambah post');
       }
     );
+  }
+  ngOnDestroy(){
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

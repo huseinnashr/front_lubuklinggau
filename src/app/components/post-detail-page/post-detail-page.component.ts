@@ -62,7 +62,7 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
   }
 
   checkCanAnswer(){
-    if (this.aService.getCurrentUser() == null) return false;
+    if (this.aService.getCurrentUser() == null || this.post == null) return false;
     
     if (this.aService.getCurrentUser().usertype == USER_TYPE.REGULAR)
       return false;

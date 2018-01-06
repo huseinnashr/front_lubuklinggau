@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Post, Reply } from '../models/Post';
-import { Http, Response, Headers, RequestOptions } from '@angular/Http';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { CONFIG } from '../_config/index';
 import { MatSnackBar } from '@angular/material';

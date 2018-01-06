@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
@@ -6,13 +6,14 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 import { UserService, CategoryService, AuthService } from '../../services';
 import { USER_TYPE, Dinas } from '../../models/index';
 import { AdminService } from '../../services/admin.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-manage-admin-page',
   templateUrl: './manage-admin-page.component.html',
   styleUrls: ['./manage-admin-page.component.scss']
 })
-export class ManageAdminPageComponent implements OnInit {
+export class ManageAdminPageComponent implements OnInit, OnDestroy {
 
   dinaslist: Dinas[];
   dinas: string = "2";
@@ -24,7 +25,8 @@ export class ManageAdminPageComponent implements OnInit {
     Validators.required,
     Validators.email,
   ]);  
-  
+  private ngUnsubscribe: Subject<any> = new Subject();
+
   constructor(
     private cService: CategoryService,
     public aService: AuthService,
@@ -35,12 +37,16 @@ export class ManageAdminPageComponent implements OnInit {
   ngOnInit() {
     this.isSuperUser = this.aService.getCurrentUser().usertype == USER_TYPE.SUPERUSER;
     this.dinas = this.isSuperUser ? "1" : "2";
-    this.cService.getDinas().subscribe(
+    this.cService.getDinas()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
       (dinas) => {
         this.dinaslist = dinas.slice(this.isSuperUser? 0: 1);
       }, (e) => { console.log(e); },
     );
-    this.admService.getAdmins().subscribe(
+    this.admService.getAdmins()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
       (admins) => {
         this.admins = admins;
       }, (e) => { console.log(e); },
@@ -48,11 +54,15 @@ export class ManageAdminPageComponent implements OnInit {
   }
 
   onAddAdmin(email, dinasId){
-    this.admService.addAdmin(email, dinasId).subscribe(
+    this.admService.addAdmin(email, dinasId)
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
       (success) => {
         this.dinas = this.isSuperUser ? "1" : "2";
         this.emailFormControl.reset();
-        this.admService.getAdmins().subscribe(
+        this.admService.getAdmins()
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(
           (admins) => {
             this.admins = admins;
             this.onCloseEditMode();
@@ -67,7 +77,9 @@ export class ManageAdminPageComponent implements OnInit {
       data: { description: `Kamu akan mengubah ${email} menjadi admin ${this.dinaslist[this.cService.findIndex(dinasId, this.dinaslist)].name}!`, action: 'Lanjutkan' },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(result => {
       if (result){
         this.onAddAdmin(email, dinasId);
       };
@@ -92,11 +104,15 @@ export class ManageAdminPageComponent implements OnInit {
       data: { description: `Kamu akan mecabut hak admin ${email}!`, action: 'Lanjutkan' },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(result => {
       if (result) {
         this.admService.deleteAdmin(email, dinasId).subscribe(
           (success) => {
-            this.admService.getAdmins().subscribe(
+            this.admService.getAdmins()
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe(
               (admins) => {
                 this.admins = admins;
                 this.onCloseEditMode();
@@ -106,5 +122,10 @@ export class ManageAdminPageComponent implements OnInit {
         );
       }
     });
+  }
+
+  ngOnDestroy(){
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { CategoryService } from '../../services/index';
 import { MatDialog } from '@angular/material';
 import { Category } from '../../models/index';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-manage-category',
   templateUrl: './manage-category.component.html',
   styleUrls: ['./manage-category.component.scss']
 })
-export class ManageCategoryComponent implements OnInit {
+export class ManageCategoryComponent implements OnInit, OnDestroy {
   isEditing: boolean;
   categoryId: number;
   categories: Category[];
@@ -19,6 +20,7 @@ export class ManageCategoryComponent implements OnInit {
     Validators.required,
     Validators.minLength(4),
   ]);  
+  private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(
     private cService: CategoryService,
@@ -26,7 +28,9 @@ export class ManageCategoryComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.cService.getCategories().subscribe(
+    this.cService.getCategories()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
       (categories) => {
         this.categories = categories;
       }, (e) => { console.log(e); },
@@ -38,9 +42,13 @@ export class ManageCategoryComponent implements OnInit {
       data: { description: `Kategori yang telah ditambahkan tidak bisa dihapus! Yakin ingin menambahkan?`, action: 'Yakin' },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(result => {
       if (result){
-        this.cService.addCategory(name).subscribe(
+        this.cService.addCategory(name)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(
           (result) => {
             this.formControl.reset();
             this.categories.push(result);
@@ -56,11 +64,15 @@ export class ManageCategoryComponent implements OnInit {
       data: { description: `Kamu akan mengubah kategori ${id} menjadi ${name}!`, action: 'Lanjutkan' },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(result => {
       if (result){
-        this.cService.updateCategory(id, name).subscribe(
+        this.cService.updateCategory(id, name)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(
           (result) => {
-            this.formControl.reset();
+            this.onCloseEditMode();
             let index = this.cService.findIndex(id, this.categories);
             this.categories[index].name = name; 
           }, (e) => { console.log(e); },
@@ -79,5 +91,10 @@ export class ManageCategoryComponent implements OnInit {
     this.formControl.setValue(name);
     this.categoryId = id;
     this.isEditing = true;
+  }
+
+  ngOnDestroy(){
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

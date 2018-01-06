@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatChipInputEvent, DateAdapter, PageEvent } from '@angular/material';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
@@ -8,13 +8,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PostService, CategoryService } from '../../services/';
 import { Category, Dinas } from '../../models/index';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-cari-page',
   templateUrl: './cari-page.component.html',
   styleUrls: ['./cari-page.component.scss'],
 })
-export class CariPageComponent implements OnInit {
+export class CariPageComponent implements OnInit, OnDestroy {
 
   categories: Category[];
   dinasList: Dinas[];
@@ -25,6 +26,8 @@ export class CariPageComponent implements OnInit {
   resultlength: number = 0;
   query: SearchQuery = new SearchQuery;
 
+  private ngUnsubscribe: Subject<any> = new Subject();
+
   constructor(
     public route: ActivatedRoute, 
     private navigator: Router,
@@ -34,12 +37,16 @@ export class CariPageComponent implements OnInit {
   ) {}
 
   ngOnInit(){
-    this.cService.getCategories().subscribe(
+    this.cService.getCategories()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
       (categories) => {
         this.categories = categories;
       }, (e) => { console.log(e); },
     );
-    this.cService.getDinas().subscribe(
+    this.cService.getDinas()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
       (dinas) => {
         this.dinasList = dinas;
       }, (e) => { console.log(e); },
@@ -79,7 +86,9 @@ export class CariPageComponent implements OnInit {
   }
 
   getPosts(){
-    this.pService.getPosts(this.query).subscribe(
+    this.pService.getPosts(this.query)
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
       (result) => {
         if(result) {
           this.resultlength = result.count;
@@ -110,6 +119,11 @@ export class CariPageComponent implements OnInit {
     this.query.page = event.pageIndex;
     this.query.size = event.pageSize;    
     this.onSearch();
+  }
+
+  ngOnDestroy(){
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }
 

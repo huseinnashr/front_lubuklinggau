@@ -3,7 +3,7 @@ import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/catch'
 import 'rxjs/add/observable/of';
 import { Observable, Subject } from 'rxjs/Rx';
-import { Http, Response, Headers, RequestOptions } from '@angular/Http';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { CONFIG } from '../_config/index';
 import { MatSnackBar } from '@angular/material';
 import { Reply } from '../models/Post';
@@ -41,7 +41,7 @@ export class AuthService {
               }
           })
           .catch((error, caught): Observable<boolean> => {
-            this.snackBar.open(error.json().message, null, { duration: 3000 });
+            this.snackBar.open(error.json().message || 'Gagal masuk, Kesalahan Server', null, { duration: 3000 });
             return Observable.of(false);
           });
   }
@@ -62,7 +62,7 @@ export class AuthService {
               }
           })
           .catch((error, caught): Observable<boolean> => {
-            this.snackBar.open(error.json().message, null, { duration: 3000 });
+            this.snackBar.open(error.json().message || 'Gagal mendaftar, Kesalahan Server', null, { duration: 3000 });
             return Observable.of(false);
           }); 
   }
