@@ -1,0 +1,29 @@
+<div class="mat-display-1" #el>Kelola Dinas</div>
+<mat-card>
+  <div class="mat-headline" *ngIf="!isEditing">Tambah</div>
+  <div class="mat-headline" *ngIf="isEditing">Edit Dinas id: {{dinasId}}</div>
+  <div class="tambah-container">
+      <mat-form-field class="field-a">
+          <input matInput placeholder="Nama dinas" minlength="4" type="text" [formControl]="formControl" required>
+          <mat-error *ngIf="(formControl.hasError('minlength') || formControl.hasError('required'))">
+              Nama dinas <strong>diperlukan</strong> minimal 4 karakter
+          </mat-error>
+      </mat-form-field>
+      <div>
+        <a *ngIf="!isEditing" mat-raised-button color="primary" (click)="onAddDinas(formControl.value)" [disabled]="!(formControl.valid)" class="admin-btn">Tambah</a>
+        <a *ngIf="isEditing" mat-raised-button color="primary" (click)="onEditDinas(dinasId, formControl.value)" class="admin-btn">Edit</a>
+        <a *ngIf="isEditing" mat-raised-button (click)="onCloseEditMode()" class="admin-btn">Batal</a>
+      </div>
+  </div>
+</mat-card>
+
+<div class="mat-headline">Daftar dinas</div>
+<div class="daftar-container">
+  <mat-card *ngFor="let d of dinas" class="daftar-item">
+      <div style="text-align: center; font-size: 16px">{{d.id}}</div>
+      <div style="text-align: center; font-size: 16px">{{d.name}}</div>
+      <div class="toolbar">
+        <button mat-icon-button (click)="editModeOn(el, d.id, d.name)"><mat-icon>edit</mat-icon></button>
+      </div>
+  </mat-card>
+</div>

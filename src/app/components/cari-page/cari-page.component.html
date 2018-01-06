@@ -3,13 +3,13 @@
   <mat-form-field class="category">
       <mat-select [(value)]="query.category"  placeholder="Kategori">
         <mat-option>-- None --</mat-option>
-        <mat-option *ngFor="let cat of cService.getCategories()" value={{cat.id}}>{{cat.name}}</mat-option>
+        <mat-option *ngFor="let cat of categories" value={{cat.id}}>{{cat.name}}</mat-option>
       </mat-select>
   </mat-form-field>  
   <mat-form-field class="dinas">
       <mat-select [(value)]="query.dinas"  placeholder="Dinas">
         <mat-option>-- None --</mat-option>
-        <mat-option *ngFor="let dinas of cService.getDinas()" value={{dinas.id}}>{{dinas.name}}</mat-option>
+        <mat-option *ngFor="let dinas of dinasList" value={{dinas.id}}>{{dinas.name}}</mat-option>
       </mat-select>
   </mat-form-field>
   <mat-form-field class="keyword">

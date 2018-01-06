@@ -42,5 +42,12 @@ export class AppComponent {
       this.navigator.navigate(['']);
     });
   }
+
+  canManageSite(){
+    if (this.currentUser){
+      return this.currentUser.usertype == USER_TYPE.SUPERUSER || this.currentUser.dinas.id == 1;
+    }
+    return false;
+  }
 }
 

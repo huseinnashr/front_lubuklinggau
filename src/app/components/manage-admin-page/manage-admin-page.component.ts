@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 import { UserService, CategoryService, AuthService } from '../../services';
-import { USER_TYPE } from '../../models/index';
+import { USER_TYPE, Dinas } from '../../models/index';
 import { AdminService } from '../../services/admin.service';
 
 @Component({
@@ -14,7 +14,7 @@ import { AdminService } from '../../services/admin.service';
 })
 export class ManageAdminPageComponent implements OnInit {
 
-  dinaslist: object[];
+  dinaslist: Dinas[];
   dinas: string = "2";
   admins: object[];
   isEditing: boolean = false;
@@ -35,7 +35,11 @@ export class ManageAdminPageComponent implements OnInit {
   ngOnInit() {
     this.isSuperUser = this.aService.getCurrentUser().usertype == USER_TYPE.SUPERUSER;
     this.dinas = this.isSuperUser ? "1" : "2";
-    this.dinaslist = this.cService.getDinas().slice(this.isSuperUser? 0: 1, );
+    this.cService.getDinas().subscribe(
+      (dinas) => {
+        this.dinaslist = dinas.slice(this.isSuperUser? 0: 1);
+      }, (e) => { console.log(e); },
+    );
     this.admService.getAdmins().subscribe(
       (admins) => {
         this.admins = admins;
@@ -60,7 +64,7 @@ export class ManageAdminPageComponent implements OnInit {
 
   onEditAdmin(email, dinasId){
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: { description: `Kamu akan mengubah ${email} menjadi admin ${this.cService.findDinasName(dinasId)}!`, action: 'Lanjutkan' },
+      data: { description: `Kamu akan mengubah ${email} menjadi admin ${this.dinaslist[this.cService.findIndex(dinasId, this.dinaslist)].name}!`, action: 'Lanjutkan' },
     });
 
     dialogRef.afterClosed().subscribe(result => {

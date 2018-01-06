@@ -17,7 +17,9 @@
         <a mat-list-item routerLink="/profil" *ngIf="currentUser"><mat-icon>person</mat-icon>Husein</a>
         <a mat-list-item routerLink="/masuk" *ngIf="!currentUser"><mat-icon>person</mat-icon>Masuk</a>
         <a mat-list-item routerLink="/daftar" *ngIf="!currentUser"><mat-icon>person_add</mat-icon>Daftar</a>
-        <a mat-list-item routerLink="/kelola-admin" *ngIf="currentUser && currentUser.usertype < REGULAR"><mat-icon>group</mat-icon>Kelola Admin</a>
+        <a mat-list-item routerLink="/kelola-admin" *ngIf="canManageSite()"><mat-icon>group</mat-icon>Kelola Admin</a>
+        <a mat-list-item routerLink="/kelola-kategori" *ngIf="canManageSite()"><mat-icon>filter_list</mat-icon>Kelola Category</a>
+        <a mat-list-item routerLink="/kelola-dinas" *ngIf="canManageSite()"><mat-icon>account_balance</mat-icon>Kelola Dinas</a>
         <a mat-list-item (click)="onLogout()" *ngIf="currentUser"><mat-icon>keyboard_tab</mat-icon>Keluar</a>
         <a mat-list-item routerLink="/bantuan"><mat-icon>help_outline</mat-icon>Bantuan</a>
       </mat-nav-list>

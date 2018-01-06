@@ -1,0 +1,74 @@
+.tambah-container {
+  display: grid;
+  grid-row-gap: 8px;
+}
+
+@media screen and (max-width: 560px) {
+  .tambah-container{
+    grid-template-areas:
+      "email"
+      "category"
+      "tambah-btn";
+  }
+}
+
+@media screen and (min-width: 560px) {
+  .tambah-container{
+    grid-template-areas:
+      "email email category"
+      "tambah-btn . .";
+    grid-template-columns: auto auto 50%;
+    grid-column-gap: 16px;
+  }
+}
+
+.field-a {
+  grid-area: email;
+}
+
+.category {
+  grid-area: category;
+}
+
+.tambah-btn{
+  grid-area: tambah-btn;
+}
+
+.mat-headline {
+  margin: 16px 0px 8px 0px;
+}
+
+.daftar-admin-container {
+  display: grid;
+  grid-gap: 16px;
+}
+
+@media screen and (max-width: 560px){
+  .daftar-container{
+    grid-template-columns: auto auto;
+  }
+}
+
+@media screen and (min-width: 560px){
+  .daftar-container{
+    grid-template-columns: auto auto auto;
+  }
+}
+
+@media screen and (min-width: 1100px){
+  .daftar-container{
+    grid-template-columns: auto auto auto auto;
+  }
+}
+
+.daftar-item {
+  display:inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.toolbar {
+  display: inline-flex;
+  justify-content: center;
+}

@@ -19,7 +19,8 @@ export class PostToolbarComponent {
   canEdit: boolean;
 
   getCanEdit(){
-    if( this.aService.getCurrentUser().usertype == USER_TYPE.REGULAR) {
+    if (this.aService.getCurrentUser() == null) return false;
+    if (this.aService.getCurrentUser().usertype == USER_TYPE.REGULAR) {
       return this.post.authorId == this.aService.getCurrentUser().id;
     } else if (this.aService.getCurrentUser().usertype == USER_TYPE.ADMIN){
       return this.post.dinasId == this.aService.getCurrentUser().dinas.id;

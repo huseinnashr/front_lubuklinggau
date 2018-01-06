@@ -7,6 +7,7 @@ import { Post } from '../../models/Post';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PostService, CategoryService } from '../../services/';
+import { Category, Dinas } from '../../models/index';
 
 @Component({
   selector: 'app-cari-page',
@@ -15,6 +16,8 @@ import { PostService, CategoryService } from '../../services/';
 })
 export class CariPageComponent implements OnInit {
 
+  categories: Category[];
+  dinasList: Dinas[];
   dateFrom: FormControl
   dateUntil: FormControl
   separatorKeysCodes = [ENTER, COMMA];
@@ -31,6 +34,16 @@ export class CariPageComponent implements OnInit {
   ) {}
 
   ngOnInit(){
+    this.cService.getCategories().subscribe(
+      (categories) => {
+        this.categories = categories;
+      }, (e) => { console.log(e); },
+    );
+    this.cService.getDinas().subscribe(
+      (dinas) => {
+        this.dinasList = dinas;
+      }, (e) => { console.log(e); },
+    );
     this.loadParams();
   }
 

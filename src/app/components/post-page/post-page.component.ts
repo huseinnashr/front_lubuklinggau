@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { PostService } from '../../services/post.service';
 import { CategoryService } from '../../services/category.service';
 import 'rxjs/add/operator/filter';
+import { Category } from '../../models/index';
 
 @Component({
   selector: 'app-post-page',
@@ -17,6 +18,7 @@ export class PostPageComponent implements OnInit {
   resultlength: number;
   category: string;
   query: PostQuery = new PostQuery();
+  private categories: Category[];
 
   constructor(
     private route: ActivatedRoute, 
@@ -26,12 +28,17 @@ export class PostPageComponent implements OnInit {
     }
 
   ngOnInit() {
+    this.cService.getCategories().subscribe(
+      (categories) => {
+        this.categories = categories;
+      }, (e) => { console.log(e); },
+    );
     this.loadParams();      
   }
 
   loadParams(){
     this.category = this.route.snapshot.queryParamMap.get('category');
-    if (this.cService.findCategoryId(this.category) == -1)
+    if (this.cService.findIdByName(this.category, this.categories) == null)
       this.navigator.navigate(['/404']);
     let paramQuery = this.route.snapshot.queryParamMap;
     this.query.page = paramQuery.get('page') ? +paramQuery.get('page') : 0;
@@ -41,7 +48,7 @@ export class PostPageComponent implements OnInit {
 
   search(){
     let query = { 
-      category: this.cService.findCategoryId(this.category), 
+      category: this.cService.findIdByName(this.category, this.categories), 
       page: this.query.page, 
       size: this.query.size 
     };

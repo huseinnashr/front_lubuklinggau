@@ -36,6 +36,8 @@ import { AdminService } from './services/admin.service';
 import { HttpClientModule }    from '@angular/common/http';
 import { HttpModule } from '@angular/Http';
 import { DisposisiDialogComponent } from './components/dialog/disposisi-dialog/disposisi-dialog.component';
+import { ManageCategoryComponent } from './components/manage-category/manage-category.component';
+import { ManageDinasComponent } from './components/manage-dinas/manage-dinas.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,8 @@ import { DisposisiDialogComponent } from './components/dialog/disposisi-dialog/d
     ConfirmationDialogComponent,
     NotfoundPageComponent,
     DisposisiDialogComponent,
+    ManageCategoryComponent,
+    ManageDinasComponent,
   ],
   imports: [
     BrowserModule,
