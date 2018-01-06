@@ -13,8 +13,13 @@ export class UtamaPageComponent implements OnInit {
 
   constructor(private pService: PostService) { }
 
-  ngOnInit() {
-    this.posts = this.pService.getPostsPreview();
+  ngOnInit() {    
+    this.pService.getPosts(null).subscribe(
+      (result) => {
+        if(result)
+          this.posts = result.rows;
+      },
+    )
   }
 
 }

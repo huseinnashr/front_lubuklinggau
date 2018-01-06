@@ -34,6 +34,8 @@ import { AuthGuard, AdminGuard, AlreadyAuthGuard } from './_guards/index';
 import { NotfoundPageComponent } from './components/notfound-page/notfound-page.component';
 import { AdminService } from './services/admin.service';
 import { HttpClientModule }    from '@angular/common/http';
+import { HttpModule } from '@angular/Http';
+import { DisposisiDialogComponent } from './components/dialog/disposisi-dialog/disposisi-dialog.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,7 @@ import { HttpClientModule }    from '@angular/common/http';
     ManageAdminPageComponent,
     ConfirmationDialogComponent,
     NotfoundPageComponent,
+    DisposisiDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,7 +67,6 @@ import { HttpClientModule }    from '@angular/common/http';
     BrowserAnimationsModule,
     MaterialModule,
     HttpModule,
-    HttpClientModule,
   ],
   providers: [ 
     PostService, 
@@ -78,7 +80,7 @@ import { HttpClientModule }    from '@angular/common/http';
     AdminGuard,
     AdminService,
    ],
-  entryComponents: [ConfirmationDialogComponent],
+  entryComponents: [ConfirmationDialogComponent, DisposisiDialogComponent],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

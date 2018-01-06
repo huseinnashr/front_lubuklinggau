@@ -7,25 +7,17 @@
     </mat-error>
   </mat-form-field>
   <mat-form-field class="keyword">
-    <mat-chip-list #chipList>
-      <mat-chip *ngFor="let keyword of keywords" (remove)="remove(keyword)" [selectable]="true">
-        {{keyword}}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-      <input placeholder="Kata kunci (butuh 5)..."
-            [matChipInputFor]="chipList"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            [matChipInputAddOnBlur]="true"
-            (matChipInputTokenEnd)="add($event)" [disabled]="keywords.length >= 5"/>
-    </mat-chip-list>
+    <mat-select [(value)]="category"  placeholder="Kategori" required>
+        <mat-option *ngFor="let cat of cService.getCategories()" value={{cat.id}}>{{cat.name}}</mat-option>
+    </mat-select>
   </mat-form-field>
   <mat-form-field class="description">
-    <textarea matInput placeholder="Deskripsi" matTextareaAutosize matAutosizeMinRows="10"></textarea>
+    <textarea matInput placeholder="Deskripsi" matTextareaAutosize matAutosizeMinRows="10" [(ngModel)]="description"></textarea>
   </mat-form-field>
 
   <div class="add-btn-container">
-      <button mat-raised-button color="primary" (click)="onTambahPost()" [disabled]="!titleFormControl.valid || keywords.length < 5">Tambah</button>
+      <button mat-raised-button color="primary" (click)="onTambahPost()" [disabled]="!titleFormControl.valid || !category">Tambah</button>
       <div style="margin: 0px 8px"></div>
-      <button mat-raised-button color="link" [disabled]="!titleFormControl.valid || keywords.length < 5">Tambah dengan lokasi</button>
+      <button mat-raised-button color="link" [disabled]="!titleFormControl.valid || !category">Tambah dengan lokasi</button>
   </div>
 </mat-card>

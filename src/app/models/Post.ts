@@ -1,35 +1,30 @@
 export interface Post {
   id: string,
   title: string,
-  author: string,
-  keywords?: string[],
-  hasAccess: boolean,
+  authorId: number,
+  author: { id: number, name: string },
+  dinas: string,
+  dinasId: number,
+  categoryId: number,
+  category: string, 
   isAnswered: boolean,
-  isFollowed: boolean,
-  isReported: boolean,
-  followers: any,
-  flaggers: any,
-  category: string,
-  created_at: string,
-  address: string,
-  location: {
-    lat: number,
-    lng: number
-  },
-  body: string,
+  createdAt: string,
+  updatedAt: string,
+  description: string,
 }
 
 export interface PostToolbarData {
   id: string,
+  authorId: number,
+  dinas: string,
+  dinasId: number,
   isFollowed: boolean;
-  isReported: boolean;
   isAnswered: boolean;
-  followers: any;
 }
 
 export interface Reply {
   id: string,
+  authorId: string,
   postId: string,
-  hasAccess: boolean,
   body: string,
 }

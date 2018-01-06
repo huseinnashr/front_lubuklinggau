@@ -25,11 +25,11 @@ const routes: Routes = [
   { path: 'kelola-admin', component: ManageAdminPageComponent, canActivate: [AdminGuard] },
   { path: 'bantuan', component: BantuanPageComponent },
   { path: 'post/tambah', component: TambahPostPageComponent, canActivate: [AuthGuard]},
-  { path: 'post/:category', component: PostPageComponent },
-  { path: 'post/:category/:id', component: PostDetailPageComponent },
-  { path: 'post/:category/:id/edit', component: EditPostPageComponent, canActivate: [AuthGuard] },
-  { path: 'post/:category/:id/jawaban/tambah', component: TambahJawabanPageComponent, canActivate: [AdminGuard] },
-  { path: 'post/:category/:id/jawaban/edit', component: EditJawabanPageComponent, canActivate: [AdminGuard] },
+  { path: 'post', component: PostPageComponent },
+  { path: 'post/:id', component: PostDetailPageComponent },
+  { path: 'post/:id/edit', component: EditPostPageComponent, canActivate: [AuthGuard] },
+  { path: 'post/:id/jawaban/tambah', component: TambahJawabanPageComponent, canActivate: [AdminGuard] },
+  { path: 'post/:id/jawaban/edit', component: EditJawabanPageComponent, canActivate: [AdminGuard] },
   { path: '404', component: NotfoundPageComponent },
   { path: '**', redirectTo: '404' }
 ];

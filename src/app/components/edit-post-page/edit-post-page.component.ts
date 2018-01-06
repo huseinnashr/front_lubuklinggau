@@ -5,6 +5,7 @@ import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from '../../services/post.service';
 import { Post } from '../../models/Post';
+import { CategoryService } from '../../services/index';
 
 @Component({
   selector: 'app-edit-post-page',
@@ -17,9 +18,8 @@ export class EditPostPageComponent implements OnInit {
     Validators.required,
     Validators.minLength(15),
   ]);
-
-  separatorKeysCodes = [ENTER, COMMA];
-  keywords: string[] = [];
+  
+  category: string;
   description;
 
   post: Post;
@@ -28,40 +28,32 @@ export class EditPostPageComponent implements OnInit {
     private route: ActivatedRoute,
     private navigator: Router,
     private pService: PostService,
+    public cService: CategoryService
   ) { }
   
   ngOnInit() {
     let postId = this.route.snapshot.params['id'];
-    this.post = this.pService.getPostById(postId);
-    this.titleFormControl.setValue(this.post.title);
-    this.keywords = this.post.keywords;
-    this.description = this.post.body;
-  }
-
-
-  add(event: MatChipInputEvent): void {
-    let input = event.input;
-    let value = event.value;
-
-    if ((value || '').trim()) {
-      this.keywords.push(value.trim());
-    }
-
-    if (input) {
-      input.value = '';
-    }
-  }
-
-  remove(item: string): void {
-    let index = this.keywords.indexOf(item);
-
-    if (index >= 0) {
-      this.keywords.splice(index, 1);
-    }
+    this.pService.getPostById(postId).subscribe((post) => {
+      if (!post){
+        this.navigator.navigate(['/404']);
+      }
+      this.post = post;    
+      this.titleFormControl.setValue(this.post.title);
+      this.category = this.post.categoryId.toString();
+      this.description = this.post.description;
+    });
   }
 
   onEditPost(){
-    
+    this.post.title = this.titleFormControl.value;
+    this.post.categoryId = +this.category;
+    this.post.description = this.description;
+
+    this.pService.updatePost(this.post).subscribe((updated) => {
+      if (updated){
+        this.navigator.navigate([`/post/${this.post.id}`]);
+      }
+    });
   }
 
 }

@@ -30,7 +30,7 @@ export class PostPageComponent implements OnInit {
   }
 
   loadParams(){
-    this.category = this.route.snapshot.paramMap.get('category');
+    this.category = this.route.snapshot.queryParamMap.get('category');
     if (this.cService.findCategoryId(this.category) == -1)
       this.navigator.navigate(['/404']);
     let paramQuery = this.route.snapshot.queryParamMap;
@@ -45,8 +45,15 @@ export class PostPageComponent implements OnInit {
       page: this.query.page, 
       size: this.query.size 
     };
-    this.resultlength = this.pService.getPostsPreviewLength(query);
-    this.filteredPosts = this.pService.getPostsPreview(query);
+    this.pService.getPosts(this.query).subscribe(
+      (result) => {
+        if(result) {
+          this.resultlength = result.count;
+          this.filteredPosts = result.rows;
+        }
+      },
+      (err) => {}
+    )
   }
 
   pageEvent(event: PageEvent){

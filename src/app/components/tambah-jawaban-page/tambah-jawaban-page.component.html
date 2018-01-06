@@ -1,7 +1,7 @@
 <div class="mat-display-1" style="margin-bottom:16px">Tambah Jawaban</div>
 <mat-card class="add-jawaban-container">
   <div class="title mat-title">
-    {{post.title}}
+    {{post?.title}}
   </div>
   <mat-form-field class="jawaban">
     <textarea [formControl]="jawabanFormControl" matInput placeholder="Jawaban" matTextareaAutosize matAutosizeMinRows="10" required></textarea>

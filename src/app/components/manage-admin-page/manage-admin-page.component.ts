@@ -14,8 +14,8 @@ import { AdminService } from '../../services/admin.service';
 })
 export class ManageAdminPageComponent implements OnInit {
 
-  categories: object[];
-  category: string = "2";
+  dinaslist: object[];
+  dinas: string = "2";
   admins: object[];
   isEditing: boolean = false;
   isSuperUser: boolean = false;
@@ -28,32 +28,44 @@ export class ManageAdminPageComponent implements OnInit {
   constructor(
     private cService: CategoryService,
     public aService: AuthService,
-    public adService: AdminService,
+    public admService: AdminService,
     public dialog: MatDialog,
   ) { }
 
   ngOnInit() {
-    this.isSuperUser = this.aService.getCurrentUser().type == USER_TYPE.SUPERUSER;
-    this.categories = this.cService.getCategories().slice(this.isSuperUser? 0: 1, );
-    this.admins = this.adService.getAdmins();
+    this.isSuperUser = this.aService.getCurrentUser().usertype == USER_TYPE.SUPERUSER;
+    this.dinas = this.isSuperUser ? "1" : "2";
+    this.dinaslist = this.cService.getDinas().slice(this.isSuperUser? 0: 1, );
+    this.admService.getAdmins().subscribe(
+      (admins) => {
+        this.admins = admins;
+      }, (e) => { console.log(e); },
+    );
   }
 
-  onAddAdmin(email, category){
-    this.adService.addAdmin({
-      email: email, category: +category });
-    this.category = "2";
-    this.emailFormControl.reset();
+  onAddAdmin(email, dinasId){
+    this.admService.addAdmin(email, dinasId).subscribe(
+      (success) => {
+        this.dinas = this.isSuperUser ? "1" : "2";
+        this.emailFormControl.reset();
+        this.admService.getAdmins().subscribe(
+          (admins) => {
+            this.admins = admins;
+            this.onCloseEditMode();
+          }, (e) => { console.log(e); },
+        );
+      }, (e) => { console.log(e); }
+    );
   }
 
-  onEditAdmin(email: string, category: string){
+  onEditAdmin(email, dinasId){
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: { description: `Kamu akan mengubah ${email} menjadi admin ${this.cService.findCategoryName(+category)}!`, action: 'Lanjutkan' },
+      data: { description: `Kamu akan mengubah ${email} menjadi admin ${this.cService.findDinasName(dinasId)}!`, action: 'Lanjutkan' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result){
-        this.adService.editAdmin(email, category);
-        this.onCloseEditMode();
+        this.onAddAdmin(email, dinasId);
       };
     });
   }
@@ -61,26 +73,34 @@ export class ManageAdminPageComponent implements OnInit {
   onCloseEditMode(){
     this.isEditing = false;
     this.emailFormControl.enable();
-    this.emailFormControl.reset();
-    this.category = "";
   }
   
-  editModeOn(el, email: string, category: string){
+  editModeOn(el, email: string, dinasId: number){
     el.scrollIntoView( {behavior:"smooth"} );
     this.emailFormControl.setValue(email);
     this.emailFormControl.disable({onlySelf: true});
-    this.category = this.cService.findCategoryId(category).toString();
+    this.dinas = dinasId.toString();
     this.isEditing = true;
   }
 
-
-  onDeleteAdmin(email: string) {
+  onDeleteAdmin(email: string, dinasId: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: { description: `Kamu akan mecabut hak admin ${email}!`, action: 'Lanjutkan' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) this.adService.deleteAdmin(email);
+      if (result) {
+        this.admService.deleteAdmin(email, dinasId).subscribe(
+          (success) => {
+            this.admService.getAdmins().subscribe(
+              (admins) => {
+                this.admins = admins;
+                this.onCloseEditMode();
+              }, (e) => { console.log(e); },
+            );
+          }, (e) => { console.log(e); }
+        );
+      }
     });
   }
 }

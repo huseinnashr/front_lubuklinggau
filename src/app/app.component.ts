@@ -1,9 +1,9 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, Inject } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { AuthService } from './services/index';
 import { Subscription } from 'rxjs/Subscription';
-import { USER_TYPE } from './models/index';
-import { Router } from '@angular/router';
+import { USER_TYPE, CurrentUser } from './models/index';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 
 export class AppComponent { 
-  authData: { usertype: USER_TYPE };
+  currentUser: CurrentUser;
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
   private authListener: Subscription;
@@ -28,8 +28,8 @@ export class AppComponent {
     this.mobileQuery = media.matchMedia('(max-width: 760px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
-    this.authData = aService.getCurrentUser();
-    this.authListener = aService.authChange.subscribe(() => { this.authData = aService.getCurrentUser(); });
+    this.currentUser = aService.getCurrentUser();
+    this.authListener = aService.authChange.subscribe(() => { this.currentUser = aService.getCurrentUser(); });
   }
 
   ngOnDestroy(): void {

@@ -18,4 +18,17 @@
 
 :host {
   display: inherit;
+  word-wrap: break-word;
 }
+
+.infoContainer {
+  display: inline-flex;
+  font-size: small;
+  flex-wrap: wrap;
+}
+
+.info {
+  margin-right: 8px;
+}
+
+

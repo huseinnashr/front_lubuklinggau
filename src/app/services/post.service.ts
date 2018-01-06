@@ -1,63 +1,198 @@
 import { Injectable } from '@angular/core';
 import { Post, Reply } from '../models/Post';
-import { Http } from '@angular/Http';
+import { Http, Response, Headers, RequestOptions } from '@angular/Http';
+import { Observable } from 'rxjs/Observable';
+import { CONFIG } from '../_config/index';
+import { MatSnackBar } from '@angular/material';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class PostService {
 
-  private post: Post;
-  private reply: Reply;
+  constructor(
+    public http: Http, 
+    private snackBar: MatSnackBar,
+    private aService: AuthService,
+  ) { }
 
-  constructor(public http: Http) { 
-    this.post = {
-      id: "1",
-      title: "Apakah ada subsidi untuk pembelian panel surya?",
-      author: "Husein",
-      keywords: [ "energi", "sumber daya terbarukan", "subsidi", "pembelian", "harga"],
-      hasAccess: true,
-      isAnswered: true,
-      isFollowed: true,
-      isReported: false,
-      followers: 20,
-      flaggers: null,
-      address: "Jl Bakti",
-      category: "umum",
-      created_at: "17-12-2017",
-      location: { lat: 124, lng: 234 },
-      body: "A rainbow is a meteorological phenomenon that is caused by reflection, refraction and dispersion of light in water droplets resulting in a spectrum of light appearing in the sky. It takes the form of a multicoloured circular arc. Rainbows caused by sunlight always appear in the section of sky directly opposite the sun."
-    }
-
-    this.reply = {
-      id: "3",
-      postId: "1",
-      hasAccess: true,
-      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    }
+  getPosts(filters): Observable<{rows: Post[], count: number}> {
+    const headers = new Headers({'filters': filters});
+    const options = new RequestOptions({headers: headers});
+    return this.http.get(`${CONFIG.API_ADDRESS}/post/`, options)
+    .map((response: Response): { rows: Post[], count: number } => {
+        let res = response.json();
+        if (res.count != 0) {
+            res.rows.map((post) => {
+              post.category = post.category.name;
+              post.dinas = post.dinas.name;
+              return post;
+            })
+            return res;
+        } else {
+          throw new Error('No Content');
+        }
+    })
+    .catch((error, caught): Observable<{ rows: Post[], count: number}> => {
+      this.snackBar.open('Gagal memuat post', null, { duration: 3000 });
+      return Observable.of(null);
+    });
   }
 
-  getPostsPreview(filter: object = {}){
-    let posts: Post[] = [];
-    for(let i = 0; i < 12; i++){
-      posts.push(this.post);
-    }
-
-    // return this.http.get('https://jsonplaceholder.typicode.com/posts')
-    //   .map(res => res.json());
-    return posts;
+  addPost(title, category, description): Observable<number> {
+    return this.http.post(`${CONFIG.API_ADDRESS}/post/`, { title, category, description }, this.aService.getHeader())
+    .map((response: Response): number => {
+        let postId = response.json() ? response.json().id : null;
+        if (postId) {
+            this.snackBar.open(response.json().message, null, { duration: 3000 });
+            return postId;
+        } else {
+          this.snackBar.open('Post gagal dibuat', null, { duration: 3000 });
+          return -1;
+        }
+    })
+    .catch((error, caught): Observable<number> => {
+      this.snackBar.open(error.json().message, null, { duration: 3000 });
+      return Observable.of(-1);
+    });
   }
 
-  getPostsPreviewLength(filter: object = {}){
-    // return this.http.get('https://jsonplaceholder.typicode.com/posts')
-    //   .map(res => res.json());
-    return 12;
+  getPostById(id): Observable<Post> {
+    return this.http.get(`${CONFIG.API_ADDRESS}/post/${id}`)
+    .map((response: Response): Post => {
+        let post = response.json();
+        if (post) {
+            post.category = post.category.name;
+            post.dinas = post.dinas.name;
+            return post;
+        } else {
+          return null;
+        }
+    })
+    .catch((error, caught): Observable<Post> => {
+      this.snackBar.open(error.json().message, null, { duration: 3000 });
+      return Observable.of(null);
+    });
   }
 
-  getPostById(postId: string){
-    return this.post;
+  updatePost(post): Observable<boolean>{
+    return this.http.post(`${CONFIG.API_ADDRESS}/post/${post.id}`, { 
+      title: post.title, categoryId: post.categoryId, description: post.description}, this.aService.getHeader())
+    .map((response: Response): boolean => {
+        let count = response.json() ? response.json().count : null;
+        if (count > 0) {
+            this.snackBar.open(response.json().message, null, { duration: 3000 });
+            return true;
+        } else if (count == 0) {
+          this.snackBar.open(response.json().message, null, { duration: 3000 });
+          return false;
+        } else {
+          this.snackBar.open('Post gagal diperbaharui', null, { duration: 3000 });
+          return false;
+        }
+    })
+    .catch((error, caught): Observable<boolean> => {
+      this.snackBar.open('Kesalahan dalam mengaupdate post', null, { duration: 3000 });
+      return Observable.of(false);
+    });
+  }
+
+  deletePost(post): Observable<boolean>{
+    return this.http.delete(`${CONFIG.API_ADDRESS}/post/${post.id}`, this.aService.getHeader())
+    .map((response: Response): boolean => {
+        let count = response.json() ? response.json().count : null;
+        this.snackBar.open(response.json().message, null, { duration: 3000 });
+        return count > 0;
+    })
+    .catch((error, caught): Observable<boolean> => {
+      this.snackBar.open('Gagal menghapus post', null, { duration: 3000 });
+      return Observable.of(false);
+    });
+  }
+
+  disposisi(post): Observable<{ dinasId: number, dinas: string }>{
+    return this.http.post(`${CONFIG.API_ADDRESS}/post/${post.id}/disposisi`, { dinasId: post.dinasId }, this.aService.getHeader())
+    .map((response: Response): { dinasId: number, dinas: string } => {
+        let result = response.json();
+        if (result.data) {
+          this.snackBar.open(`Berhasil disposisi ke dinas ${result.data.dinas}`, null, { duration: 3000 });
+          return result.data;
+        } else {
+          this.snackBar.open(result.message, null, { duration: 3000 });
+          return;
+        }
+    })
+    .catch((error, caught): Observable<{ dinasId: number, dinas: string }> => {
+      this.snackBar.open('Gagal disposisi', null, { duration: 3000 });
+      return Observable.of(null);
+    });
+  }
+
+  addReply(reply, post): Observable<boolean>{
+    return this.http.post(`${CONFIG.API_ADDRESS}/post/${post.id}/reply`, { body: reply, postDinas: post.dinasId }, this.aService.getHeader())
+    .map((response: Response): boolean => {
+        let replyId = response.json() ? response.json().id : null;
+        if (replyId) {
+            this.snackBar.open(response.json().message, null, { duration: 3000 });
+            return true;
+        } else {
+          this.snackBar.open('Gagal dalam membuat jawaban', null, { duration: 3000 });
+          return false;
+        }
+    })
+    .catch((error, caught): Observable<boolean> => {
+      this.snackBar.open('Kesalahan dalam membuat jawaban', null, { duration: 3000 });
+      return Observable.of(false);
+    });
   }
 
   getReplyByPostId(postId: string){
-    return this.reply;
+    return this.http.get(`${CONFIG.API_ADDRESS}/post/${postId}/reply`)
+    .map((response: Response): Reply => {
+        let reply = response.json();
+        if (reply) {
+            return reply;
+        } else {
+          return null;
+        }
+    })
+    .catch((error, caught): Observable<Reply> => {
+      this.snackBar.open('Gagal mendapatkan jawaban', null, { duration: 3000 });
+      return Observable.of(null);
+    });
+  }
+
+  updateReply(reply, post): Observable<boolean>{
+    return this.http.post(`${CONFIG.API_ADDRESS}/post/${post.id}/reply/${reply.id}`, { body: reply.body, postDinas: post.dinasId }, this.aService.getHeader())
+    .map((response: Response): boolean => {
+        let replyId = response.json() ? response.json().reply : null;
+        if (replyId > 0) {
+            this.snackBar.open(response.json().message, null, { duration: 3000 });
+            return true;
+        } else if (replyId == 0) {
+          this.snackBar.open(response.json().message, null, { duration: 3000 });
+          return false;
+        } else {
+          this.snackBar.open('Jawaban gagal diperbaharui', null, { duration: 3000 });
+          return false;
+        }
+    })
+    .catch((error, caught): Observable<boolean> => {
+      this.snackBar.open('Kesalahan dalam mengaupdate jawaban', null, { duration: 3000 });
+      return Observable.of(false);
+    });
+  }
+
+  deleteReply(reply, post): Observable<boolean>{
+    return this.http.delete(`${CONFIG.API_ADDRESS}/post/${post.id}/reply/${reply.id}`, this.aService.getHeader())
+    .map((response: Response): boolean => {
+        let count = response.json() ? response.json().count : null;
+        this.snackBar.open(response.json().message, null, { duration: 3000 });
+        return count > 0;
+    })
+    .catch((error, caught): Observable<boolean> => {
+      this.snackBar.open('Gagal menghapus reply', null, { duration: 3000 });
+      return Observable.of(false);
+    });
   }
 
 }

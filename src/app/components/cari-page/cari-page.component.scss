@@ -5,7 +5,8 @@
 @media screen and (max-width: 1170px){
   .filter-container {
     grid-template-areas: 
-      "category" 
+      "category"
+      "dinas" 
       "keyword"
       "followed"
       "answered"
@@ -18,12 +19,12 @@
 @media screen and (min-width: 1170px){
   .filter-container {
     grid-template-areas: 
-      "category followed answered" 
-      "category datefilter datefilter" 
-      "keyword dateFilter dateFilter"
-      "cariBtnContainer cariBtnContainer cariBtnContainer";
+      "category dinas followed answered" 
+      "category dinas datefilter datefilter" 
+      "keyword keyword dateFilter dateFilter"
+      "cariBtnContainer cariBtnContainer cariBtnContainer cariBtnContainer";
 
-    grid-template-columns: 50% 27% 23%;
+    grid-template-columns: auto auto 27% 23%;
     grid-column-gap: 16px;
   }
 }
@@ -38,6 +39,10 @@
 
 .answered {
   grid-area: answered;
+}
+
+.dinas {
+  grid-area: dinas;
 }
 
 .followed {

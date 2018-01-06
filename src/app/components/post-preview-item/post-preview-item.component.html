@@ -1,10 +1,10 @@
-<a class="postPreviewTitle text-responsive mat-body-2" routerLink="/post/{{post.category}}/{{post.id}}">{{post.title | titlecase}}</a>
+<a class="postPreviewTitle text-responsive mat-body-2" routerLink="/post/{{post.id}}">{{post?.title | titlecase}}</a>
 <div class="icon">
     <app-post-toolbar [data]="post"></app-post-toolbar>
 </div>
-<div class="author text-sm">{{post.author}}</div>
+<div class="author text-sm">{{post?.author.name}}</div>
 <div class="infoContainer text-sm">
-  <div class="info">{{post.address}}</div>
-  <div class="info">{{post.category}}</div>
-  <div class="info">{{post.created_at}}</div>
+  <div class="info">{{post?.dinas}}</div>
+  <div class="info">{{post?.category}}</div>
+  <div class="info">{{post?.createdAt | date: 'dd/MM/yyyy'}}</div>
 </div>

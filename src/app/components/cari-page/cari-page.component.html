@@ -5,19 +5,15 @@
         <mat-option>-- None --</mat-option>
         <mat-option *ngFor="let cat of cService.getCategories()" value={{cat.id}}>{{cat.name}}</mat-option>
       </mat-select>
+  </mat-form-field>  
+  <mat-form-field class="dinas">
+      <mat-select [(value)]="query.dinas"  placeholder="Dinas">
+        <mat-option>-- None --</mat-option>
+        <mat-option *ngFor="let dinas of cService.getDinas()" value={{dinas.id}}>{{dinas.name}}</mat-option>
+      </mat-select>
   </mat-form-field>
   <mat-form-field class="keyword">
-      <mat-chip-list #chipList>
-        <mat-chip *ngFor="let keyword of query.keywords" (remove)="remove(keyword)" [selectable]="false">
-          {{keyword}}
-          <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
-        </mat-chip>
-        <input placeholder="Kata kunci (5 max)..."
-              [matChipInputFor]="chipList"
-              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              [matChipInputAddOnBlur]="true"
-              (matChipInputTokenEnd)="add($event)" [disabled]="query.keywords.length >= 5"/>
-      </mat-chip-list>
+      <input matInput placeholder="Judul Post" [(ngModel)]="query.title" type="text">
   </mat-form-field>
   <mat-checkbox [(ngModel)]="query.followed" class="followed">Hanya Diikuti</mat-checkbox>
   <mat-checkbox [(ngModel)]="query.answered" class="answered">Hanya Terjawab</mat-checkbox>

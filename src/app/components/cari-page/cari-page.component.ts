@@ -37,7 +37,8 @@ export class CariPageComponent implements OnInit {
   loadParams(){
     let paramQuery = this.route.snapshot.queryParamMap;
     this.query.category = paramQuery.get('category');
-    this.query.keywords = paramQuery.getAll('keywords');
+    this.query.dinas = paramQuery.get('dinas');
+    this.query.title = paramQuery.get('title');
     this.query.answered = paramQuery.get('answered') == "true" ? true : null;
     this.query.followed = paramQuery.get('followed') == "true" ? true : null;
     this.query.datefilter = paramQuery.get('datefilter') == "true" ? true : null;
@@ -55,35 +56,24 @@ export class CariPageComponent implements OnInit {
     }
 
     if (paramQuery.get('s') == "1")
-      this.filteredPosts = this.pService.getPostsPreview();
-  }
-
-  add(event: MatChipInputEvent): void {
-    let input = event.input;
-    let value = event.value;
-
-    if ((value || '').trim()) {
-      this.query.keywords.push(value.trim());
-    }
-
-    if (input) {
-      input.value = '';
-    }
-  }
-
-  remove(item: any): void {
-    let index = this.query.keywords.indexOf(item);
-
-    if (index >= 0) {
-      this.query.keywords.splice(index, 1);
-    }
+      this.getPosts();
   }
 
   onSearch() {
     this.processQueryParams(); 
     this.navigator.navigate(['/cari'], {queryParams: this.query});
-    this.resultlength = this.pService.getPostsPreviewLength(this.query);
-    this.filteredPosts = this.pService.getPostsPreview(this.query);
+    this.getPosts();
+  }
+
+  getPosts(){
+    this.pService.getPosts(this.query).subscribe(
+      (result) => {
+        if(result) {
+          this.resultlength = result.count;
+          this.filteredPosts = result.rows;
+        }
+      }
+    )
   }
 
   private processQueryParams(){
@@ -113,7 +103,8 @@ export class CariPageComponent implements OnInit {
 class SearchQuery {
   s: string = '1';
   category: string;
-  keywords: string[];
+  dinas: string;
+  title: string;
   followed: boolean;
   answered: boolean;
   datefilter: boolean;

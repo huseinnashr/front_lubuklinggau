@@ -1,0 +1,10 @@
+<mat-form-field style="width:100%">
+  <mat-select [value]="data?.dinas"  placeholder="Dinas" #select>
+    <mat-option *ngFor="let dinas of cService.getDinas()" value={{dinas.id}}>{{dinas.name}}</mat-option>
+  </mat-select>
+</mat-form-field>
+<div style="display:inline-flex">
+  <button mat-raised-button color="primary" [mat-dialog-close]="select.value">Disposisi</button>
+  <div style="margin: 0px 8px"></div>
+  <button mat-raised-button (click)="onNoClick()">Batal</button>
+</div>

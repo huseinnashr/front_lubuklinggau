@@ -23,11 +23,28 @@ export class EditJawabanPageComponent implements OnInit {
   
   ngOnInit() {
     let postId = this.route.snapshot.params['id'];
-    this.post = this.pService.getPostById(postId);
-    this.reply = this.pService.getReplyByPostId(postId);
-    this.jawabanFormControl.setValue(this.reply.body);
+    this.pService.getPostById(postId).subscribe((post) => {
+      if (!post){
+        this.navigator.navigate(['/404']);
+      }
+      this.post = post;
+    });
+    this.pService.getReplyByPostId(postId).subscribe((reply) => {
+      if (reply){
+        this.reply = reply;
+        this.jawabanFormControl.setValue(this.reply.body);
+      } else {
+        this.navigator.navigate([`/post/${postId}`]);
+      }
+    });
   }
 
   onEditJawaban(){
+    this.reply.body = this.jawabanFormControl.value;
+    this.pService.updateReply(this.reply, this.post).subscribe((reply) => {
+      if (reply){
+        this.navigator.navigate([`/post/${this.post.id}`]);
+      }
+    });
   }
 }
