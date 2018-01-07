@@ -147,7 +147,7 @@ export class CategoryService {
     return -1;
   }
 
-  findIndex(id, items){
+  findIndex(id: number, items){
     var i = 0;
     var len = items.length;
     for (i = 0; i < len; i++) {

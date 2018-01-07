@@ -75,7 +75,7 @@ export class ManageAdminPageComponent implements OnInit, OnDestroy {
 
   onEditAdmin(email, dinasId){
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: { description: `Kamu akan mengubah ${email} menjadi admin ${this.dinaslist[this.cService.findIndex(dinasId, this.dinaslist)].name}!`, action: 'Lanjutkan' },
+      data: { description: `Kamu akan mengubah ${email} menjadi admin ${this.dinaslist[this.cService.findIndex(+dinasId, this.dinaslist)].name}!`, action: 'Lanjutkan' },
     });
 
     dialogRef.afterClosed()

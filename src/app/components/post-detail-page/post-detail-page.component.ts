@@ -7,6 +7,7 @@ import { USER_TYPE } from '../../models/index';
 import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { AuthorDialogComponent } from '../dialog/author-dialog/author-dialog.component';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-post-detail-page',
@@ -40,7 +41,6 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
           this.navigator.navigate(['/404']);
         } else {
           this.post = post;
-          this.canAnswer = this.checkCanAnswer();
         }
     });
 
@@ -54,6 +54,20 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
   }
 
   onDeleteReply(){
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { description: `Kamu akan menghapus reply post ini!`, action: 'Lanjutkan' },
+    });
+
+    dialogRef.afterClosed()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(result => {
+      if (result){
+        this.deleteReply();
+      };
+    });
+  }
+
+  deleteReply(){
     this.pService.deleteReply(this.reply, this.post)
       .takeUntil(this.ngUnsubscribe)
       .subscribe((removed) => {

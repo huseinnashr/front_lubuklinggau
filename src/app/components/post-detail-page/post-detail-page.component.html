@@ -12,7 +12,7 @@
 <mat-card>
   <div class="mat-headline" style="margin: 0px 0px 8px 0px">Jawaban</div>
   <div *ngIf="reply != null; else notfound">
-    <div *ngIf="canAnswer" class="jawabanToolbar">
+    <div *ngIf="checkCanAnswer()" class="jawabanToolbar">
         <mat-icon class="pointer" routerLink="jawaban/edit">settings</mat-icon> 
         <div class="filler"></div>
         <mat-icon (click)="onDeleteReply()" class="pointer">delete_forever</mat-icon> 
