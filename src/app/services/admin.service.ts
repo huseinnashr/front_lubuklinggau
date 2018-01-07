@@ -6,6 +6,7 @@ import { CONFIG } from '../_config/index';
 import { MatSnackBar } from '@angular/material';
 import { AuthService } from './auth.service';
 import { Admin } from '../models/index';
+import { User } from '../models/index'
 
 @Injectable()
 export class AdminService {
@@ -19,7 +20,7 @@ export class AdminService {
 
 
   getAdmins(): Observable<Admin[]> {
-    return this.http.get(`${CONFIG.API_ADDRESS}/user/admins`, this.aService.getHeader())
+    return this.http.get(`${CONFIG.API_ADDRESS}/admin`, this.aService.getHeader())
     .map((response: Response): Admin[] => {
       let admins = response.json().admins;
       if (admins) {
@@ -40,7 +41,7 @@ export class AdminService {
   }
 
   addAdmin(email, dinasId): Observable<boolean> {
-    return this.http.post(`${CONFIG.API_ADDRESS}/user/admins`, { email, dinasId }, this.aService.getHeader())
+    return this.http.post(`${CONFIG.API_ADDRESS}/admin`, { email, dinasId }, this.aService.getHeader())
     .map((response: Response): boolean => {
       let res = response.json();
         this.snackBar.open(response.json().message, null, { duration: 3000 });
@@ -52,8 +53,8 @@ export class AdminService {
     });
   }
 
-  deleteAdmin(email, dinasId){
-    return this.http.post(`${CONFIG.API_ADDRESS}/user/admins/cabut`, { email, dinasId }, this.aService.getHeader())
+  deleteAdmin(email, dinasId): Observable<boolean> {
+    return this.http.post(`${CONFIG.API_ADDRESS}/admin/cabut`, { email, dinasId }, this.aService.getHeader())
     .map((response: Response): boolean => {
       let res = response.json();
         this.snackBar.open(response.json().message, null, { duration: 3000 });
@@ -62,6 +63,23 @@ export class AdminService {
     .catch((error, caught): Observable<boolean> => {
       this.snackBar.open('Kesalahan dalam aksi kelola admin', null, { duration: 3000 });
       return Observable.of(false);
+    });
+  }
+
+  getUserInfo(id): Observable<User> {
+    return this.http.get(`${CONFIG.API_ADDRESS}/user/${id}`, this.aService.getHeader())
+    .map((response: Response): User => {
+      let user = response.json().user;
+      if (user) {
+        return user;
+      } else {
+        this.snackBar.open(response.json().message, null, { duration: 3000 });
+        throw new Error();
+      }
+    })
+    .catch((error, caught): Observable<User> => {
+      this.snackBar.open('Kesalahan dalam mendapatkan info user', null, { duration: 3000 });
+      return Observable.throw(error);
     });
   }
 }

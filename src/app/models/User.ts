@@ -14,3 +14,7 @@ export interface Admin {
   dinasId: number,
   dinas: string,
 }
+
+export interface User {
+  id: number, name: string, email: string, nik: string
+}

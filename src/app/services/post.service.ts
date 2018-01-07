@@ -15,7 +15,7 @@ export class PostService {
     private aService: AuthService,
   ) { }
 
-  getPosts(filters): Observable<{rows: Post[], count: number}> {
+  getPosts(filters, showSnackbar = true): Observable<{rows: Post[], count: number}> {
     const headers = new Headers();
     const options = new RequestOptions({headers: headers});
     options.headers.set('filters', JSON.stringify(filters));
@@ -30,7 +30,7 @@ export class PostService {
             })
             return res;
         } else {
-          this.snackBar.open(res.message, null, { duration: 3000 });
+          if (showSnackbar) this.snackBar.open(res.message, null, { duration: 3000 });
           return { rows: null, count: res.count }
         }
     })

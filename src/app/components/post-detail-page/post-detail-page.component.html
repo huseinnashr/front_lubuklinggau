@@ -1,9 +1,9 @@
 <mat-card>
   <app-post-toolbar [data]="post" [isShown]="true"></app-post-toolbar>
   <div class="infoContainer">
+    <div class="info pointer" [class.pointer]="aService.isAdmin()" (click)="showAuthor(post?.author.id)">{{post?.author.name}}</div>
     <div class="info">{{post?.dinas}}</div>
     <div class="info">{{post?.category}}</div>
-    <div class="info">{{post?.author.name}}</div>
     <div class="info">{{post?.createdAt | date: 'dd MMMM yyyy'}}</div>
   </div>
   <div class="title mat-title">{{post?.title | titlecase}}</div>

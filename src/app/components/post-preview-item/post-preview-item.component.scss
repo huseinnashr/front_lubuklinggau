@@ -37,6 +37,10 @@
   cursor: pointer;
 }
 
+.pointer:hover{
+  text-decoration: underline;
+}
+
 .text-sm {
   font-size: small;
 }

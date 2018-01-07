@@ -2,7 +2,7 @@
 <div class="icon">
     <app-post-toolbar [data]="post"></app-post-toolbar>
 </div>
-<div class="author text-sm">{{post?.author.name}}</div>
+<div class="author text-sm" [class.pointer]="aService.isAdmin()" (click)="showAuthor(post?.author.id)">{{post?.author.name}}</div>
 <div class="infoContainer text-sm">
   <div class="info">{{post?.dinas}}</div>
   <div class="info">{{post?.category}}</div>

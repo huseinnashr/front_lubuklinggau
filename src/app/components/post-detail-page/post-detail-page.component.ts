@@ -5,6 +5,8 @@ import { PostService } from '../../services/post.service';
 import { AuthService, CategoryService } from '../../services/index';
 import { USER_TYPE } from '../../models/index';
 import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material';
+import { AuthorDialogComponent } from '../dialog/author-dialog/author-dialog.component';
 
 @Component({
   selector: 'app-post-detail-page',
@@ -25,7 +27,8 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
     private route:ActivatedRoute, 
     private pService: PostService,
     private navigator: Router,
-    private aService: AuthService,
+    public aService: AuthService,
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit() {
@@ -70,6 +73,14 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
       return this.aService.getCurrentUser().dinas.id == this.post.dinasId;
     else if (this.aService.getCurrentUser().usertype == USER_TYPE.SUPERUSER) {
       return false;
+    }
+  }
+
+  showAuthor(id){
+    if (this.aService.getCurrentUser() != null && this.aService.getCurrentUser().usertype < USER_TYPE.REGULAR){
+      this.dialog.open(AuthorDialogComponent, {
+        data: { id },
+      });
     }
   }
 

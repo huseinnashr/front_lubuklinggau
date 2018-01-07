@@ -5,6 +5,7 @@
     <div class="mat-headline filler">Belum dijawab</div>
     <a mat-raised-button routerLink="/post" [queryParams]="{ req: 'Belum Dijawab' }">selengkapnya ...</a>
   </div>
+  <div *ngIf="!customizedPost">Tidak ada</div>
   <app-post-preview-item *ngFor="let post of customizedPost" [post]="post"></app-post-preview-item>
 </span>
 
@@ -13,6 +14,7 @@
     <div class="mat-headline filler">Post Saya</div>
     <a mat-raised-button routerLink="/post" [queryParams]="{ req: 'Post Saya' }">selengkapnya ...</a>
   </div>
+  <div *ngIf="!customizedPost">Tidak ada</div>
   <app-post-preview-item *ngFor="let post of customizedPost" [post]="post"></app-post-preview-item>
 </span>
 

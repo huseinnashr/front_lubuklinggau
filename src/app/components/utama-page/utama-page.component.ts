@@ -35,7 +35,7 @@ export class UtamaPageComponent implements OnInit, OnDestroy {
     }
 
     if (this.customizedFilter){
-      this.pService.getPosts(this.customizedFilter)
+      this.pService.getPosts(this.customizedFilter, false)
       .takeUntil(this.ngUnsubscribe)
       .subscribe(
         (result) => {

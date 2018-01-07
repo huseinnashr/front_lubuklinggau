@@ -37,6 +37,7 @@ import { HttpModule } from '@angular/http';
 import { DisposisiDialogComponent } from './components/dialog/disposisi-dialog/disposisi-dialog.component';
 import { ManageCategoryComponent } from './components/manage-category/manage-category.component';
 import { ManageDinasComponent } from './components/manage-dinas/manage-dinas.component';
+import { AuthorDialogComponent } from './components/dialog/author-dialog/author-dialog.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { ManageDinasComponent } from './components/manage-dinas/manage-dinas.com
     DisposisiDialogComponent,
     ManageCategoryComponent,
     ManageDinasComponent,
+    AuthorDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -83,7 +85,7 @@ import { ManageDinasComponent } from './components/manage-dinas/manage-dinas.com
     AdminGuard,
     AdminService,
    ],
-  entryComponents: [ConfirmationDialogComponent, DisposisiDialogComponent],
+  entryComponents: [ConfirmationDialogComponent, DisposisiDialogComponent, AuthorDialogComponent],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

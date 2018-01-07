@@ -7,7 +7,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { CONFIG } from '../_config/index';
 import { MatSnackBar } from '@angular/material';
 import { Reply } from '../models/Post';
-import { Post } from '../models/index';
+import { Post, USER_TYPE } from '../models/index';
 import { CurrentUser } from '../models/User';
 
 @Injectable()
@@ -115,6 +115,13 @@ export class AuthService {
     }     
     // Kominfo atau admin dinas post
     else if (this.currentUser.dinas.id == 1 || this.currentUser.dinas.name == post.dinas) return true;
+    return false;
+  }
+
+  isAdmin():boolean{
+    if (this.getCurrentUser() != null && this.getCurrentUser().usertype < USER_TYPE.REGULAR){
+      return true;
+    }
     return false;
   }
 
