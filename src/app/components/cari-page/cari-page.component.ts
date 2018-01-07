@@ -6,8 +6,8 @@ import { FormControl } from '@angular/forms';
 import { Post } from '../../models/Post';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { PostService, CategoryService } from '../../services/';
-import { Category, Dinas } from '../../models/index';
+import { PostService, CategoryService, AuthService } from '../../services/';
+import { Category, Dinas, USER_TYPE } from '../../models/index';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -34,6 +34,7 @@ export class CariPageComponent implements OnInit, OnDestroy {
     private pService: PostService, 
     public cService: CategoryService, 
     private adapter: DateAdapter<any>,
+    private aService: AuthService,
   ) {}
 
   ngOnInit(){
@@ -57,9 +58,9 @@ export class CariPageComponent implements OnInit, OnDestroy {
   loadParams(){
     let paramQuery = this.route.snapshot.queryParamMap;
     this.query.category = paramQuery.get('category');
-    this.query.dinas = paramQuery.get('dinas');
+    this.query.dinasId = paramQuery.get('dinasId');
     this.query.title = paramQuery.get('title');
-    this.query.answered = paramQuery.get('answered') == "true" ? true : null;
+    this.query.isAnswered = paramQuery.get('isAnswered') == "true" ? true : null;
     this.query.followed = paramQuery.get('followed') == "true" ? true : null;
     this.query.datefilter = paramQuery.get('datefilter') == "true" ? true : null;
     this.query.page = paramQuery.get('page') ? +paramQuery.get('page') : 0;
@@ -80,27 +81,52 @@ export class CariPageComponent implements OnInit, OnDestroy {
   }
 
   onSearch() {
-    this.processQueryParams(); 
+    let query = this.processQueryParams(); 
     this.navigator.navigate(['/cari'], {queryParams: this.query});
     this.getPosts();
   }
 
+  isLoggedIn():boolean{
+    return this.aService.getCurrentUser() != null;
+  }
+
+  isRegular(){
+    if (this.aService.getCurrentUser() == null) return true;
+    if (this.aService.getCurrentUser().usertype == USER_TYPE.REGULAR) {
+      return true;
+    } 
+    return false;
+  }
+
   getPosts(){
-    this.pService.getPosts(this.query)
+    this.pService.getPosts(this.tranformQuery(this.query))
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (result) => {
-        if(result) {
-          this.resultlength = result.count;
-          this.filteredPosts = result.rows;
-        }
-      }
+        this.resultlength = result.count;
+        this.filteredPosts = result.rows;
+      }, (e) => { console.log(e) }
     )
   }
 
+  tranformQuery(query: SearchQuery){
+    return {
+      authorId: query.followed? this.isLoggedIn()? this.aService.getCurrentUser().id: null : null,
+      categoryId: query.category,
+      dinasId: query.dinasId,
+      title: query.title,
+      isAnswered: query.isAnswered,
+      offset: query.page * query.size,
+      size: query.size,
+      dateFilter: query.datefilter,
+      dateFrom: query.datefrom,
+      dateUntil: query.dateuntil,
+    };
+  }
+
   private processQueryParams(){
-    if (!this.query.answered)
-      this.query.answered = null;
+    if (!this.query.isAnswered)
+      this.query.isAnswered = null;
 
     if (!this.query.followed)
       this.query.followed = null;
@@ -130,17 +156,13 @@ export class CariPageComponent implements OnInit, OnDestroy {
 class SearchQuery {
   s: string = '1';
   category: string;
-  dinas: string;
+  dinasId: string;
   title: string;
   followed: boolean;
-  answered: boolean;
+  isAnswered: boolean;
   datefilter: boolean;
   datefrom: string;
   dateuntil: string;
-  location?: {
-    lat: number,
-    lng: number
-  }
   page: number = 0;
   size: number = 10;
 }

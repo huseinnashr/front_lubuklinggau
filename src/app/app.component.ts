@@ -45,7 +45,7 @@ export class AppComponent {
 
   canManageSite(){
     if (this.currentUser){
-      return this.currentUser.usertype == USER_TYPE.SUPERUSER || this.currentUser.dinas.id == 1;
+      return this.currentUser.usertype == USER_TYPE.SUPERUSER || (this.currentUser.usertype == USER_TYPE.ADMIN && this.currentUser.dinas.id == 1)
     }
     return false;
   }

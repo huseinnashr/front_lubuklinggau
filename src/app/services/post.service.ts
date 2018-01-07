@@ -16,12 +16,13 @@ export class PostService {
   ) { }
 
   getPosts(filters): Observable<{rows: Post[], count: number}> {
-    const headers = new Headers({'filters': filters});
+    const headers = new Headers();
     const options = new RequestOptions({headers: headers});
+    options.headers.set('filters', JSON.stringify(filters));
     return this.http.get(`${CONFIG.API_ADDRESS}/post/`, options)
     .map((response: Response): { rows: Post[], count: number } => {
         let res = response.json();
-        if (res.count != 0) {
+        if (res.count > 0) {
             res.rows.map((post) => {
               post.category = post.category.name;
               post.dinas = post.dinas.name;
@@ -29,12 +30,12 @@ export class PostService {
             })
             return res;
         } else {
-          throw new Error('No Content');
+          this.snackBar.open(res.message, null, { duration: 3000 });
+          return { rows: null, count: res.count }
         }
     })
     .catch((error, caught): Observable<{ rows: Post[], count: number}> => {
-      this.snackBar.open('Gagal memuat post', null, { duration: 3000 });
-      return Observable.of(null);
+      return Observable.throw(error);
     });
   }
 
@@ -51,8 +52,8 @@ export class PostService {
         }
     })
     .catch((error, caught): Observable<number> => {
-      this.snackBar.open(error.json().message, null, { duration: 3000 });
-      return Observable.of(-1);
+      this.snackBar.open(error, null, { duration: 3000 });
+      return Observable.throw(null);
     });
   }
 

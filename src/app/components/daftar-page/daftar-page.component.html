@@ -5,7 +5,10 @@
         <mat-form-field class="field-a">
           <input matInput placeholder="Nama Lengkap" type="text" [formControl]="namaFormControl" required>
           <mat-error *ngIf="namaFormControl.hasError('required')">
-              Nama lengkap <strong>diperlukan</strong>
+            Nama lengkap <strong>diperlukan</strong>
+          </mat-error>          
+          <mat-error *ngIf="namaFormControl.hasError('maxlength')">
+            Maksimum 17 <strong>karakter</strong>
           </mat-error>
         </mat-form-field>
 

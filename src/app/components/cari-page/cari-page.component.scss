@@ -19,7 +19,7 @@
 @media screen and (min-width: 1170px){
   .filter-container {
     grid-template-areas: 
-      "category dinas followed answered" 
+      "category dinas answered followed" 
       "category dinas datefilter datefilter" 
       "keyword keyword dateFilter dateFilter"
       "cariBtnContainer cariBtnContainer cariBtnContainer cariBtnContainer";

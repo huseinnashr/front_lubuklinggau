@@ -76,7 +76,6 @@ export class AuthService {
 
   saveCurrentUser(email, res, token ){
     this.token = token;
-    console.log(res);
     this.currentUser = { id: res.id, name: res.name, email, usertype: res.usertype, dinas: res.dinas };
     localStorage.setItem('currentUser', JSON.stringify({ 
       user: this.currentUser, token 

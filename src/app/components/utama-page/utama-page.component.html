@@ -1,13 +1,26 @@
-<div class="mat-display-1">Post Teratas</div>
-<div class="section-title">
-  <div class="mat-headline">Umum</div><div class="filler"></div>
-  <a mat-raised-button routerLink="/post/umum/">selengkapnya ...</a>
-</div>
-<app-post-preview-item *ngFor="let post of posts" [post]="post"></app-post-preview-item>
+<div class="mat-display-1">Daftar Post</div>
+
+<span *ngIf="isAdmin()">
+  <div class="section-title">
+    <div class="mat-headline filler">Belum dijawab</div>
+    <a mat-raised-button routerLink="/post" [queryParams]="{ req: 'Belum Dijawab' }">selengkapnya ...</a>
+  </div>
+  <app-post-preview-item *ngFor="let post of customizedPost" [post]="post"></app-post-preview-item>
+</span>
+
+<span *ngIf="canPost()">
+  <div class="section-title">
+    <div class="mat-headline filler">Post Saya</div>
+    <a mat-raised-button routerLink="/post" [queryParams]="{ req: 'Post Saya' }">selengkapnya ...</a>
+  </div>
+  <app-post-preview-item *ngFor="let post of customizedPost" [post]="post"></app-post-preview-item>
+</span>
+
 <div class="separator"></div>
+
 <div class="section-title">
-    <div class="mat-headline">Pariwisata</div><div class="filler"></div>
-    <a mat-raised-button routerLink="/post/pariwisata/">selengkapnya ...</a>
+  <div class="mat-headline">Terbaru</div><div class="filler"></div>
+  <a mat-raised-button routerLink="/post" [queryParams]="{ req: 'terbaru'}">selengkapnya ...</a>
 </div>
 <app-post-preview-item *ngFor="let post of posts" [post]="post"></app-post-preview-item>
 <div class="bottom"></div>

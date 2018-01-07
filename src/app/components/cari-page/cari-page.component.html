@@ -7,7 +7,7 @@
       </mat-select>
   </mat-form-field>  
   <mat-form-field class="dinas">
-      <mat-select [(value)]="query.dinas"  placeholder="Dinas">
+      <mat-select [(value)]="query.dinasId"  placeholder="Dinas">
         <mat-option>-- None --</mat-option>
         <mat-option *ngFor="let dinas of dinasList" value={{dinas.id}}>{{dinas.name}}</mat-option>
       </mat-select>
@@ -15,8 +15,8 @@
   <mat-form-field class="keyword">
       <input matInput placeholder="Judul Post" [(ngModel)]="query.title" type="text">
   </mat-form-field>
-  <mat-checkbox [(ngModel)]="query.followed" class="followed">Hanya Diikuti</mat-checkbox>
-  <mat-checkbox [(ngModel)]="query.answered" class="answered">Hanya Terjawab</mat-checkbox>
+  <mat-checkbox *ngIf="isLoggedIn() && isRegular()" [(ngModel)]="query.followed" class="followed">Post sendiri</mat-checkbox>
+  <mat-checkbox [(ngModel)]="query.isAnswered" class="answered">Hanya Terjawab</mat-checkbox>
   <mat-checkbox [(ngModel)]="query.datefilter" class="datefilter">Saring Berdasarkan Tanggal</mat-checkbox>
   <div *ngIf="query.datefilter" class="dateFilter">
     <mat-form-field>
@@ -33,7 +33,7 @@
   <div class="cariBtnContainer" [class.marginTop8px]="!query.datefilter">
       <button mat-raised-button color="primary" (click)="onSearch()">Cari</button>
       <div style="margin: 0px 8px"></div>
-      <button mat-raised-button color="link">Cari berdasarkan lokasi</button>
+      <!-- <button mat-raised-button color="link">Cari berdasarkan lokasi</button> -->
   </div>
 </mat-card>
 <div class="filteredPostsPreview" >

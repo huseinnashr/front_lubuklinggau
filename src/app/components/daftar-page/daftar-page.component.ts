@@ -12,6 +12,7 @@ import { Subject } from 'rxjs';
 export class DaftarPageComponent implements OnDestroy{
   namaFormControl = new FormControl('', [
     Validators.required,
+    Validators.maxLength(17),
   ]);
 
   emailFormControl = new FormControl('', [

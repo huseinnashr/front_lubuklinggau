@@ -3,6 +3,7 @@ import { Validators, FormControl } from '@angular/forms';
 import { CategoryService, PostService } from '../../services/index';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { Category } from '../../models/index';
 
 @Component({
   selector: 'app-tambah-post-page',
@@ -16,6 +17,7 @@ export class TambahPostPageComponent implements OnInit, OnDestroy {
     Validators.minLength(15),
   ]);
   category: string;
+  categories: Category[];
   description: string;
   private ngUnsubscribe: Subject<any> = new Subject();
 
@@ -26,6 +28,13 @@ export class TambahPostPageComponent implements OnInit, OnDestroy {
   ) { }
   
   ngOnInit() {
+    this.cService.getCategories()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
+      (categories) => {
+        this.categories = categories;
+      }, (e) => { console.log(e); },
+    );
   }
 
   onTambahPost(){
@@ -43,6 +52,7 @@ export class TambahPostPageComponent implements OnInit, OnDestroy {
         console.log('Error tambah post');
       }
     );
+
   }
   ngOnDestroy(){
     this.ngUnsubscribe.next();

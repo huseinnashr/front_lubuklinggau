@@ -7,6 +7,7 @@ import { CategoryService } from '../../services/category.service';
 import 'rxjs/add/operator/filter';
 import { Category } from '../../models/index';
 import { Subject } from 'rxjs';
+import { AuthService } from '../../services/index';
 
 @Component({
   selector: 'app-post-page',
@@ -16,47 +17,58 @@ import { Subject } from 'rxjs';
 export class PostPageComponent implements OnInit, OnDestroy {
 
   filteredPosts: Post[] = [];
-  resultlength: number;
-  category: string;
+  resultlength: number = 0;
+  req: string;
   query: PostQuery = new PostQuery();
-  private categories: Category[];
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(
     private route: ActivatedRoute, 
     public navigator: Router, 
     private pService: PostService, 
-    private cService: CategoryService) {
+    private cService: CategoryService,
+    private aService: AuthService) {
     }
 
   ngOnInit() {
-    this.cService.getCategories()
-    .takeUntil(this.ngUnsubscribe)
-    .subscribe(
-      (categories) => {
-        this.categories = categories;
-      }, (e) => { console.log(e); },
-    );
     this.loadParams();      
   }
 
   loadParams(){
-    this.category = this.route.snapshot.queryParamMap.get('category');
-    if (this.cService.findIdByName(this.category, this.categories) == null)
-      this.navigator.navigate(['/404']);
     let paramQuery = this.route.snapshot.queryParamMap;
+    if (!paramQuery.get('req'))
+      this.navigator.navigate(['/404']);
+    else this.req = paramQuery.get('req');
     this.query.page = paramQuery.get('page') ? +paramQuery.get('page') : 0;
     this.query.size = paramQuery.get('size') ? +paramQuery.get('size') : 10;
     this.search();
   }
 
   search(){
-    let query = { 
-      category: this.cService.findIdByName(this.category, this.categories), 
-      page: this.query.page, 
-      size: this.query.size 
-    };
-    this.pService.getPosts(this.query)
+    let query = {};
+    if (this.req == "Belum Dijawab") {
+      if (this.aService.getCurrentUser() == null) {
+        this.navigator.navigate(['/404']);
+      } else {
+        query = { req: 'terbaru', isAnswered: false, dinasId: this.aService.getCurrentUser().dinas.id, offset: this.query.page * this.query.size };
+      }
+    } 
+    
+    else if (this.req == "Post Saya") {
+      if (this.aService.getCurrentUser() == null) {
+        this.navigator.navigate(['/404']);
+      } else {
+        query = { req: 'terbaru', authorId: this.aService.getCurrentUser().id, offset: this.query.page * this.query.size };
+      }
+    } 
+    
+    else if (this.req == "terbaru"){
+      query = { 
+        req: this.req, size: this.query.size, offset: this.query.page * this.query.size
+      };
+    }
+    
+    this.pService.getPosts(query)
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (result) => {
@@ -72,7 +84,7 @@ export class PostPageComponent implements OnInit, OnDestroy {
   pageEvent(event: PageEvent){
     this.query.page = event.pageIndex;
     this.query.size = event.pageSize;
-    this.navigator.navigate([`/post/${this.category}`], {queryParams: this.query});
+    this.navigator.navigate([`/post`], {queryParams: this.query});
     this.search();
   }
 

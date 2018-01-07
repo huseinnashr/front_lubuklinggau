@@ -32,6 +32,15 @@ export class PostToolbarComponent implements OnDestroy{
     }
   }
 
+
+  isRegular(){
+    if (this.aService.getCurrentUser() == null) return true;
+    if (this.aService.getCurrentUser().usertype == USER_TYPE.REGULAR) {
+      return true;
+    } 
+    return false;
+  }
+
   constructor(
     private aService: AuthService, 
     private pService: PostService, 

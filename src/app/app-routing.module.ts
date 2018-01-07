@@ -23,7 +23,6 @@ const routes: Routes = [
   { path: 'cari', component: CariPageComponent, },
   { path: 'masuk', component: MasukPageComponent, canActivate: [AlreadyAuthGuard] },
   { path: 'daftar', component: DaftarPageComponent, canActivate: [AlreadyAuthGuard] },
-  { path: 'profil', component: ProfilePageComponent, canActivate: [AdminGuard]},
   { path: 'kelola-admin', component: ManageAdminPageComponent, canActivate: [AdminGuard] },
   { path: 'kelola-kategori', component: ManageCategoryComponent, canActivate: [AdminGuard] },
   { path: 'kelola-dinas', component: ManageDinasComponent, canActivate: [AdminGuard] },
