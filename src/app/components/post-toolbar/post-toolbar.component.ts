@@ -26,7 +26,6 @@ export class PostToolbarComponent implements OnDestroy{
     if (this.aService.getCurrentUser().usertype == USER_TYPE.REGULAR) {
       return this.post.authorId == this.aService.getCurrentUser().id;
     } else if (this.aService.getCurrentUser().usertype == USER_TYPE.ADMIN){
-      if (this.aService.getCurrentUser().dinas.id == 1) return true;
       return this.post.dinasId == this.aService.getCurrentUser().dinas.id;
     } {
       return false;
@@ -34,9 +33,9 @@ export class PostToolbarComponent implements OnDestroy{
   }
 
 
-  isRegular(){
-    if (this.aService.getCurrentUser() == null) return true;
-    if (this.aService.getCurrentUser().usertype == USER_TYPE.REGULAR) {
+  isKominfo(){
+    if (this.aService.getCurrentUser() == null) return false;
+    if (this.aService.getCurrentUser().usertype == USER_TYPE.ADMIN && this.aService.getCurrentUser().dinas.id == 1) {
       return true;
     } 
     return false;
@@ -103,6 +102,7 @@ export class PostToolbarComponent implements OnDestroy{
       if (data) {
         this.post.dinasId = data.dinasId;
         this.post.dinas = data.dinas;
+        this.canEdit = this.getCanEdit();
       }
     });
   }
