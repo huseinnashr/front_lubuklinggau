@@ -48,7 +48,8 @@ export class ManageAdminPageComponent implements OnInit, OnDestroy {
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (admins) => {
-        this.admins = admins;
+        if(admins.length > 0)
+          this.admins = admins;
       }, (e) => { console.log(e); },
     );
   }

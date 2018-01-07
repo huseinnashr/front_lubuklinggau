@@ -23,6 +23,7 @@
 </mat-card>
 
 <div class="mat-headline">Daftar</div>
+<div *ngIf="!admins">Tidak ada</div>
 <div class="daftar-admin-container">
   <mat-card *ngFor="let admin of admins" class="daftar-admin-item">
       <div style="text-align: center; font-size: 16px">{{admin.email}}</div>

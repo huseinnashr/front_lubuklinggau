@@ -16,5 +16,5 @@ export interface Admin {
 }
 
 export interface User {
-  id: number, name: string, email: string, nik: string
+  id: number, name: string, email: string, nik: string, dinas?: { id: number, name: string }, usertype: number;
 }

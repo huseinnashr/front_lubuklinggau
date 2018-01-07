@@ -4,6 +4,8 @@ import { AuthService } from './services/index';
 import { Subscription } from 'rxjs/Subscription';
 import { USER_TYPE, CurrentUser } from './models/index';
 import { Router, NavigationEnd } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { AuthorDialogComponent } from './components/dialog/author-dialog/author-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +26,7 @@ export class AppComponent {
     media: MediaMatcher, 
     private aService: AuthService,
     private navigator: Router,
+    private dialog: MatDialog,
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 760px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -48,6 +51,12 @@ export class AppComponent {
       return this.currentUser.usertype == USER_TYPE.SUPERUSER || (this.currentUser.usertype == USER_TYPE.ADMIN && this.currentUser.dinas.id == 1)
     }
     return false;
+  }
+
+  userInfo(){
+    this.dialog.open(AuthorDialogComponent, {
+      data: { id: this.currentUser.id },
+    });
   }
 }
 

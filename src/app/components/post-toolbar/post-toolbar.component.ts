@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { DisposisiDialogComponent } from '../dialog/disposisi-dialog/disposisi-dialog.component';
 import { Subject } from 'rxjs';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-post-toolbar',
@@ -58,6 +59,20 @@ export class PostToolbarComponent implements OnDestroy{
   }
 
   onDelete(){
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { description: `Kamu akan menghapus post ini!`, action: 'Lanjutkan' },
+    });
+
+    dialogRef.afterClosed()
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(result => {
+      if (result){
+        this.deletePost();
+      };
+    });
+  }
+  
+  deletePost(){
     this.pService.deletePost(this.post)
     .takeUntil(this.ngUnsubscribe)
     .subscribe((removed) => {

@@ -11,6 +11,56 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+    <style>
+      app-root {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: white;
+        text-transform: uppercase;
+        font-family: Roboto;
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+      }
+      body {
+        background: #2196f3;
+        margin: 0;
+        padding: 0;
+      }
+      @keyframes dots {
+        50% {
+          transform: translateY(-.4rem);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+      .d {
+        animation: dots 1.5s ease-out infinite;
+      }
+      .d-2 {
+        animation-delay: .5s;
+      }
+      .d-3 {
+        animation-delay: 1s;
+      }
+      .loading-container {
+        display:flex;
+        justify-content: center;
+        font-size: 1em;
+        width: 100%;
+      }
+      .title {
+        display:flex;
+        justify-content: center;
+        font-size: 2em;
+        width: 100%;
+      }
+    </style>
+    <div class="title">ASK LUBUK LINGGAU</div>
+    <div class="loading-container">LOADING<span class="d">.</span><span class="d d-2">.</span><span class="d d-3">.</span></div>
+  </app-root>
 </body>
 </html>

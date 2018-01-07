@@ -17,8 +17,6 @@ export class AdminService {
     private aService: AuthService,
   ) { }
 
-
-
   getAdmins(): Observable<Admin[]> {
     return this.http.get(`${CONFIG.API_ADDRESS}/admin`, this.aService.getHeader())
     .map((response: Response): Admin[] => {
@@ -35,7 +33,7 @@ export class AdminService {
       }
     })
     .catch((error, caught): Observable<Admin[]> => {
-      this.snackBar.open('Kesalahan dalam mendapatkan admin', null, { duration: 3000 });
+      this.snackBar.open(error.json().message || 'Kesalahan dalam mendapatkan admin', null, { duration: 3000 });
       return Observable.of(null);
     });
   }
@@ -48,7 +46,7 @@ export class AdminService {
         return res.count > 0;
     })
     .catch((error, caught): Observable<boolean> => {
-      this.snackBar.open('Kesalahan dalam aksi kelola admin', null, { duration: 3000 });
+      this.snackBar.open(error.json().message || 'Kesalahan dalam aksi kelola admin', null, { duration: 3000 });
       return Observable.of(false);
     });
   }
@@ -61,7 +59,7 @@ export class AdminService {
         return res.count > 0;
     })
     .catch((error, caught): Observable<boolean> => {
-      this.snackBar.open('Kesalahan dalam aksi kelola admin', null, { duration: 3000 });
+      this.snackBar.open(error.json().message || 'Kesalahan dalam aksi kelola admin', null, { duration: 3000 });
       return Observable.of(false);
     });
   }
@@ -78,7 +76,7 @@ export class AdminService {
       }
     })
     .catch((error, caught): Observable<User> => {
-      this.snackBar.open('Kesalahan dalam mendapatkan info user', null, { duration: 3000 });
+      this.snackBar.open(error.json().message || 'Kesalahan dalam mendapatkan info user', null, { duration: 3000 });
       return Observable.throw(error);
     });
   }

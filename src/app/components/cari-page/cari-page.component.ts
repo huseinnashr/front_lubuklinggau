@@ -99,6 +99,7 @@ export class CariPageComponent implements OnInit, OnDestroy {
   }
 
   getPosts(){
+    this.query.req = "terbaru";
     this.pService.getPosts(this.tranformQuery(this.query))
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
@@ -165,4 +166,5 @@ class SearchQuery {
   dateuntil: string;
   page: number = 0;
   size: number = 10;
+  req?: string;
 }
