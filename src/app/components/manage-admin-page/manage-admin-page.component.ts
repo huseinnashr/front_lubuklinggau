@@ -26,6 +26,7 @@ export class ManageAdminPageComponent implements OnInit, OnDestroy {
     Validators.email,
   ]);  
   private ngUnsubscribe: Subject<any> = new Subject();
+  public isLoading = { admin: true, dinas: true, manage: false, delete: -1 }
 
   constructor(
     private cService: CategoryService,
@@ -38,6 +39,7 @@ export class ManageAdminPageComponent implements OnInit, OnDestroy {
     this.isSuperUser = this.aService.getCurrentUser().usertype == USER_TYPE.SUPERUSER;
     this.dinas = this.isSuperUser ? "1" : "2";
     this.cService.getDinas()
+    .finally(() => { this.isLoading.dinas = false; })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (dinas) => {
@@ -45,6 +47,7 @@ export class ManageAdminPageComponent implements OnInit, OnDestroy {
       }, (e) => { console.log(e); },
     );
     this.admService.getAdmins()
+    .finally(() => { this.isLoading.admin = false; })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (admins) => {
@@ -55,13 +58,17 @@ export class ManageAdminPageComponent implements OnInit, OnDestroy {
   }
 
   onAddAdmin(email, dinasId){
+    this.isLoading.manage = true;
     this.admService.addAdmin(email, dinasId)
+    .finally(() => { this.isLoading.manage = false; })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (success) => {
+        this.isLoading.admin = true;
         this.dinas = this.isSuperUser ? "1" : "2";
         this.emailFormControl.reset();
         this.admService.getAdmins()
+        .finally(() => { this.isLoading.admin = false; })
         .takeUntil(this.ngUnsubscribe)
         .subscribe(
           (admins) => {
@@ -90,6 +97,7 @@ export class ManageAdminPageComponent implements OnInit, OnDestroy {
   onCloseEditMode(){
     this.isEditing = false;
     this.emailFormControl.enable();
+    this.emailFormControl.reset();
   }
   
   editModeOn(el, email: string, dinasId: number){
@@ -100,7 +108,7 @@ export class ManageAdminPageComponent implements OnInit, OnDestroy {
     this.isEditing = true;
   }
 
-  onDeleteAdmin(email: string, dinasId: number) {
+  onDeleteAdmin(event, email: string, dinasId: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: { description: `Kamu akan mecabut hak admin ${email}!`, action: 'Lanjutkan' },
     });
@@ -109,9 +117,15 @@ export class ManageAdminPageComponent implements OnInit, OnDestroy {
     .takeUntil(this.ngUnsubscribe)
     .subscribe(result => {
       if (result) {
-        this.admService.deleteAdmin(email, dinasId).subscribe(
+        this.isLoading.delete = dinasId;
+        this.admService.deleteAdmin(email, dinasId)
+        .finally(() => { this.isLoading.delete = -1; })
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(
           (success) => {
+            this.isLoading.admin = true;
             this.admService.getAdmins()
+            .finally(() => { this.isLoading.admin = false; })
             .takeUntil(this.ngUnsubscribe)
             .subscribe(
               (admins) => {

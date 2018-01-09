@@ -19,12 +19,14 @@ export class TambahJawabanPageComponent implements OnInit, OnDestroy {
 
   post: Post;
   private ngUnsubscribe: Subject<any> = new Subject();
+  public isLoading = { post: true, add: false }
 
   constructor(private pService: PostService, private navigator: Router, private route: ActivatedRoute) { }
   
   ngOnInit() {
     let postId = this.route.snapshot.params['id'];    
     this.pService.getPostById(postId)
+    .finally(() => { this.isLoading.post = false; })
     .takeUntil(this.ngUnsubscribe)
     .subscribe((post) => {
       if (!post){
@@ -35,8 +37,10 @@ export class TambahJawabanPageComponent implements OnInit, OnDestroy {
   }
 
   onTambahJawaban(){
+    this.isLoading.add = true;
     this.pService.addReply(
       this.jawabanFormControl.value, this.post)
+      .finally(() => { this.isLoading.add = false; })
       .takeUntil(this.ngUnsubscribe)
       .subscribe(
       (res) => {

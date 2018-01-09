@@ -2,6 +2,7 @@
 <mat-card>
   <div class="mat-headline" *ngIf="!isEditing">Tambah</div>
   <div class="mat-headline" *ngIf="isEditing">Edit</div>
+  <mat-progress-bar mode="query" *ngIf="isLoading.dinas" style="margin-bottom:16px"></mat-progress-bar>
   <div class="tambah-container">
       <mat-form-field class="field-a">
           <input matInput placeholder="Email" minlength="4" type="email" [formControl]="emailFormControl" required>
@@ -15,21 +16,24 @@
           </mat-select>
       </mat-form-field>
       <div>
-        <a *ngIf="!isEditing" mat-raised-button color="primary" (click)="onAddAdmin(emailFormControl.value, dinas)" [disabled]="!(emailFormControl.valid)" class="admin-btn">Tambah</a>
-        <a *ngIf="isEditing" mat-raised-button color="primary" (click)="onEditAdmin(emailFormControl.value, dinas)" class="admin-btn">Edit</a>
+        <a *ngIf="!isEditing" mat-raised-button color="primary" (click)="onAddAdmin(emailFormControl.value, dinas)" [disabled]="!(emailFormControl.valid) || isLoading.manage" class="admin-btn">Tambah</a>
+        <a *ngIf="isEditing" mat-raised-button color="primary" (click)="onEditAdmin(emailFormControl.value, dinas)" [disabled]="isLoading.manage" class="admin-btn">Edit</a>
         <a *ngIf="isEditing" mat-raised-button (click)="onCloseEditMode()" class="admin-btn">Batal</a>
       </div>
   </div>
+  <mat-progress-bar mode="query" *ngIf="isLoading.manage" style="margin-top:16px"></mat-progress-bar>
 </mat-card>
 
 <div class="mat-headline">Daftar</div>
-<div *ngIf="!admins">Tidak ada</div>
-<div class="daftar-admin-container">
+<div *ngIf="!admins && !isLoading.admin">Tidak ada</div>
+<mat-progress-bar mode="query" *ngIf="isLoading.admin" style="margin-bottom:16px"></mat-progress-bar>
+<div class="daftar-admin-container" *ngIf="!isLoading.admin">
   <mat-card *ngFor="let admin of admins" class="daftar-admin-item">
       <div style="text-align: center; font-size: 16px">{{admin.email}}</div>
       <div style="text-align: center; font-size: 16px">{{admin.dinas}}</div>
       <div class="toolbar" *ngIf="isSuperUser || admin.dinasId != 1">
-        <button mat-icon-button (click)="onDeleteAdmin(admin.email, admin.dinasId)"><mat-icon>close</mat-icon></button>
+        <mat-spinner *ngIf="isLoading.delete == admin.dinasId" [color]="primary" [diameter]="24" class="xtramargin"></mat-spinner>
+        <button mat-icon-button *ngIf="isLoading.delete != admin.dinasId" (click)="onDeleteAdmin($event, admin.email, admin.dinasId)"><mat-icon>close</mat-icon></button>
         <button mat-icon-button (click)="editModeOn(el, admin.email, admin.dinasId)"><mat-icon>edit</mat-icon></button>
       </div>
   </mat-card>

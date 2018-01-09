@@ -20,6 +20,7 @@ export class PostToolbarComponent implements OnDestroy{
 
   canEdit: boolean;
   private ngUnsubscribe: Subject<any> = new Subject();
+  public isLoading = { delete: false };
 
   getCanEdit(){
     if (this.aService.getCurrentUser() == null) return false;
@@ -72,12 +73,14 @@ export class PostToolbarComponent implements OnDestroy{
   }
   
   deletePost(){
+    this.isLoading.delete = true;
     this.pService.deletePost(this.post)
     .takeUntil(this.ngUnsubscribe)
     .subscribe((removed) => {
         if (removed) {
           this.navigator.navigate(['']);
         }
+        this.isLoading.delete = false;
     });
   }
 

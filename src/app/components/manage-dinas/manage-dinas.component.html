@@ -10,14 +10,16 @@
           </mat-error>
       </mat-form-field>
       <div>
-        <a *ngIf="!isEditing" mat-raised-button color="primary" (click)="onAddDinas(formControl.value)" [disabled]="!(formControl.valid)" class="admin-btn">Tambah</a>
-        <a *ngIf="isEditing" mat-raised-button color="primary" (click)="onEditDinas(dinasId, formControl.value)" class="admin-btn">Edit</a>
-        <a *ngIf="isEditing" mat-raised-button (click)="onCloseEditMode()" class="admin-btn">Batal</a>
+        <a *ngIf="!isEditing" mat-raised-button color="primary" (click)="onAddDinas(formControl.value)" [disabled]="!(formControl.valid) || isLoading.manage" class="admin-btn">Tambah</a>
+        <a *ngIf="isEditing" mat-raised-button color="primary" (click)="onEditDinas(dinasId, formControl.value)" [disabled]="isLoading.manage" class="admin-btn">Edit</a>
+        <a *ngIf="isEditing && isLoading.manage" mat-raised-button (click)="onCloseEditMode()" class="admin-btn">Batal</a>
       </div>
   </div>
+  <mat-progress-bar mode="query" *ngIf="isLoading.manage" style="margin-top:16px"></mat-progress-bar>
 </mat-card>
 
 <div class="mat-headline">Daftar dinas</div>
+<mat-progress-bar mode="query" *ngIf="isLoading.dinas" style="margin-bottom:16px"></mat-progress-bar>
 <div class="daftar-container">
   <mat-card *ngFor="let d of dinas" class="daftar-item">
       <div style="text-align: center; font-size: 16px">{{d.id}}</div>

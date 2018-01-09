@@ -21,6 +21,7 @@ export class ManageDinasComponent implements OnInit, OnDestroy {
     Validators.minLength(4),
   ]);  
   private ngUnsubscribe: Subject<any> = new Subject();
+  public isLoading = { dinas: true, manage: false };
 
   constructor(
     private cService: CategoryService,
@@ -29,6 +30,7 @@ export class ManageDinasComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.cService.getDinas()
+    .finally(() => { this.isLoading.dinas = false })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (dinas) => {
@@ -46,7 +48,9 @@ export class ManageDinasComponent implements OnInit, OnDestroy {
     .takeUntil(this.ngUnsubscribe)
     .subscribe(result => {
       if (result){
+        this.isLoading.manage = true;
         this.cService.addDinas(name)
+        .finally(() => { this.isLoading.manage = false })
         .takeUntil(this.ngUnsubscribe)
         .subscribe(
           (result) => {
@@ -66,7 +70,9 @@ export class ManageDinasComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result){
+        this.isLoading.manage = true;
         this.cService.updateDinas(id, name)
+        .finally(() => { this.isLoading.manage = false })
         .takeUntil(this.ngUnsubscribe)
         .subscribe(
           (result) => {

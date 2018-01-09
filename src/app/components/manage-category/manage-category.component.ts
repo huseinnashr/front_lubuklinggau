@@ -21,6 +21,7 @@ export class ManageCategoryComponent implements OnInit, OnDestroy {
     Validators.minLength(4),
   ]);  
   private ngUnsubscribe: Subject<any> = new Subject();
+  public isLoading = { category: true, manage: false };
 
   constructor(
     private cService: CategoryService,
@@ -29,6 +30,7 @@ export class ManageCategoryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.cService.getCategories()
+    .finally(() => { this.isLoading.category = false; })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (categories) => {
@@ -46,7 +48,9 @@ export class ManageCategoryComponent implements OnInit, OnDestroy {
     .takeUntil(this.ngUnsubscribe)
     .subscribe(result => {
       if (result){
+        this.isLoading.manage = true;
         this.cService.addCategory(name)
+        .finally(() => { this.isLoading.manage = false; })
         .takeUntil(this.ngUnsubscribe)
         .subscribe(
           (result) => {
@@ -68,7 +72,9 @@ export class ManageCategoryComponent implements OnInit, OnDestroy {
     .takeUntil(this.ngUnsubscribe)
     .subscribe(result => {
       if (result){
+        this.isLoading.manage = true;
         this.cService.updateCategory(id, name)
+        .finally(() => { this.isLoading.manage = false; })
         .takeUntil(this.ngUnsubscribe)
         .subscribe(
           (result) => {

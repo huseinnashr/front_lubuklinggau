@@ -22,6 +22,7 @@ export class EditJawabanPageComponent implements OnInit, OnDestroy {
   reply: Reply;
 
   private ngUnsubscribe: Subject<any> = new Subject();
+  public isLoading = { reply: true,  edit: false }
 
   constructor(private pService: PostService, private navigator: Router, private route: ActivatedRoute) { }
   
@@ -35,7 +36,10 @@ export class EditJawabanPageComponent implements OnInit, OnDestroy {
       }
       this.post = post;
     });
-    this.pService.getReplyByPostId(postId).subscribe((reply) => {
+    this.pService.getReplyByPostId(postId)
+    .finally(() => { this.isLoading.reply = false; })
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe((reply) => {
       if (reply){
         this.reply = reply;
         this.jawabanFormControl.setValue(this.reply.body);
@@ -46,8 +50,10 @@ export class EditJawabanPageComponent implements OnInit, OnDestroy {
   }
 
   onEditJawaban(){
+    this.isLoading.edit = true;
     this.reply.body = this.jawabanFormControl.value;
     this.pService.updateReply(this.reply, this.post)
+    .finally(() => { this.isLoading.edit = false } )
     .takeUntil(this.ngUnsubscribe)
     .subscribe((reply) => {
       if (reply){

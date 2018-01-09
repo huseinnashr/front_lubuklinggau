@@ -7,5 +7,6 @@
   <mat-icon (click)="onDisposisi()" class="pointer" *ngIf="isKominfo()">import_export</mat-icon> 
   <mat-icon class="pointer" routerLink="edit" *ngIf="canEdit">settings</mat-icon> 
   <div class="filler"></div>
-  <mat-icon (click)="onDelete()" class="pointer" *ngIf="canEdit">delete_forever</mat-icon> 
+  <mat-spinner *ngIf="isLoading.delete" [color]="primary" [diameter]="24"></mat-spinner>
+  <mat-icon (click)="onDelete()" class="pointer" *ngIf="canEdit && !isLoading.delete">delete_forever</mat-icon> 
 </div>

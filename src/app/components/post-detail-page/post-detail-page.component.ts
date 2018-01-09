@@ -71,7 +71,9 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
   }
 
   deleteReply(){
+    this.isLoading.reply = true;
     this.pService.deleteReply(this.reply, this.post)
+      .finally(() => { this.isLoading.reply = false })
       .takeUntil(this.ngUnsubscribe)
       .subscribe((removed) => {
         if (removed){

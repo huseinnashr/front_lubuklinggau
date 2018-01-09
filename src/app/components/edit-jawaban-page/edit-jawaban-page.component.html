@@ -1,16 +1,19 @@
 <div class="mat-display-1" style="margin-bottom:16px">Edit Jawaban</div>
-<mat-card class="add-jawaban-container">
-  <div class="title mat-title">
-    {{post?.title}}
-  </div>
-  <mat-form-field class="jawaban">
-    <textarea [formControl]="jawabanFormControl" matInput placeholder="Jawaban" matTextareaAutosize matAutosizeMinRows="10" required></textarea>
-    <mat-error *ngIf="jawabanFormControl.hasError('required') || jawabanFormControl.hasError('minlength')">
-        Jawaban <strong>diperlukan</strong> dengan panjang minimal 15 karakter
-    </mat-error>
-  </mat-form-field>
-
+<mat-card>
+  <mat-progress-bar mode="query" *ngIf="isLoading.reply" style="margin-bottom:16px"></mat-progress-bar>
+  <span class="add-jawaban-container" *ngIf="!isLoading.reply">
+    <div class="title mat-title">
+      {{post?.title}}
+    </div>
+    <mat-form-field class="jawaban">
+      <textarea [formControl]="jawabanFormControl" matInput placeholder="Jawaban" matTextareaAutosize matAutosizeMinRows="10" required></textarea>
+      <mat-error *ngIf="jawabanFormControl.hasError('required') || jawabanFormControl.hasError('minlength')">
+          Jawaban <strong>diperlukan</strong> dengan panjang minimal 15 karakter
+      </mat-error>
+    </mat-form-field>
+  </span>
   <div class="edit-btn-container">
-      <button mat-raised-button color="primary" (click)="onEditJawaban()" [disabled]="!jawabanFormControl.valid">Terapkan Perubahan</button>
+      <button mat-raised-button color="primary" (click)="onEditJawaban()" [disabled]="!jawabanFormControl.valid || isLoading.reply || isLoading.edit">Terapkan Perubahan</button>
   </div>
+  <mat-progress-bar mode="query" *ngIf="isLoading.edit" style="margin-top:16px"></mat-progress-bar>
 </mat-card>
