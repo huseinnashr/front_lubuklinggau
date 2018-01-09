@@ -4,13 +4,13 @@
   <div class="mat-headline" *ngIf="isEditing">Edit</div>
   <mat-progress-bar mode="query" *ngIf="isLoading.dinas" style="margin-bottom:16px"></mat-progress-bar>
   <div class="tambah-container">
-      <mat-form-field class="field-a">
+      <mat-form-field class="field-a" [class.hidden]="isLoading.dinas">
           <input matInput placeholder="Email" minlength="4" type="email" [formControl]="emailFormControl" required>
           <mat-error *ngIf="(emailFormControl.hasError('email') || emailFormControl.hasError('required'))">
               Alamat email <strong>diperlukan</strong> dengan format email@domain.com
           </mat-error>
       </mat-form-field>
-      <mat-form-field class="dinas">
+      <mat-form-field class="dinas" [class.hidden]="isLoading.dinas">
           <mat-select [(value)]="dinas"  placeholder="Dinas" required>
             <mat-option *ngFor="let d of dinaslist" value={{d.id}}>{{d.name}}</mat-option>
           </mat-select>
