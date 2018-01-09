@@ -15,12 +15,14 @@ export class UtamaPageComponent implements OnInit, OnDestroy {
   public posts: Post[];
   public customizedPost: Post[];
   public customizedFilter;
+  public isLoading = { post: true, customizedPost: true };
 
   constructor(private pService: PostService, private aService: AuthService) { }
   private ngUnsubscribe: Subject<any> = new Subject();
 
   ngOnInit() {    
     this.pService.getPosts({req: 'terbaru', size: 5})
+    .finally(() => { this.isLoading.post = false })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (result) => {
@@ -36,6 +38,7 @@ export class UtamaPageComponent implements OnInit, OnDestroy {
 
     if (this.customizedFilter){
       this.pService.getPosts(this.customizedFilter, false)
+      .finally(() => { this.isLoading.customizedPost = false })
       .takeUntil(this.ngUnsubscribe)
       .subscribe(
         (result) => {

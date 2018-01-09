@@ -21,6 +21,7 @@ export class PostPageComponent implements OnInit, OnDestroy {
   req: string;
   query: PostQuery = new PostQuery();
   private ngUnsubscribe: Subject<any> = new Subject();
+  public isLoading: boolean = true;
 
   constructor(
     private route: ActivatedRoute, 
@@ -69,6 +70,7 @@ export class PostPageComponent implements OnInit, OnDestroy {
     }
     
     this.pService.getPosts(query)
+    .finally(() => { this.isLoading = false })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (result) => {

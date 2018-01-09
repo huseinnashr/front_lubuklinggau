@@ -1,17 +1,21 @@
 <mat-card>
-  <app-post-toolbar [data]="post" [isShown]="true"></app-post-toolbar>
-  <div class="infoContainer">
-    <div class="info pointer" [class.pointer]="aService.isAdmin()" (click)="showAuthor(post?.author.id)">{{post?.author.name}}</div>
-    <div class="info">{{post?.dinas}}</div>
-    <div class="info">{{post?.category}}</div>
-    <div class="info">{{post?.createdAt | date: 'dd MMMM yyyy'}}</div>
-  </div>
-  <div class="title mat-title">{{post?.title | titlecase}}</div>
-  <div class="mat-body-1">{{post?.description}}</div>
+  <div class="mat-headline" style="margin: 0px 0px 8px 0px">Post</div>
+  <span *ngIf="!isLoading.post">
+    <app-post-toolbar [data]="post" [isShown]="true"></app-post-toolbar>
+    <div class="infoContainer">
+      <div class="info showAuthor pointer" [class.pointer]="aService.isAdmin()" (click)="showAuthor(post?.author.id)">{{post?.author.name}}</div>
+      <div class="info">{{post?.dinas}}</div>
+      <div class="info">{{post?.category}}</div>
+      <div class="info">{{post?.createdAt | date: 'dd MMMM yyyy'}}</div>
+    </div>
+    <div class="title mat-title">{{post?.title | titlecase}}</div>
+    <div class="mat-body-1">{{post?.description}}</div>
+  </span>
+  <mat-progress-bar mode="query" *ngIf="isLoading.post"></mat-progress-bar>
 </mat-card>
 <mat-card>
   <div class="mat-headline" style="margin: 0px 0px 8px 0px">Jawaban</div>
-  <div *ngIf="reply != null; else notfound">
+  <div *ngIf="!isLoading.reply && reply != null; else notfound">
     <div *ngIf="checkCanAnswer()" class="jawabanToolbar">
         <mat-icon class="pointer" routerLink="jawaban/edit">settings</mat-icon> 
         <div class="filler"></div>
@@ -19,9 +23,10 @@
     </div>
     <div class="mat-body-1">{{reply?.body}}</div>
   </div>
+  <mat-progress-bar mode="query" *ngIf="isLoading.reply"></mat-progress-bar>
 </mat-card>
 
 <ng-template #notfound>
-  <div class="mat-subheading-1" *ngIf="!checkCanAnswer()">Belum dijawab</div>
+  <div class="mat-subheading-1" *ngIf="!checkCanAnswer() && !isLoading.reply">Belum dijawab</div>
   <a mat-raised-button *ngIf="checkCanAnswer()" mat-button-raised color="primary" routerLink="jawaban/tambah">Jawab</a>
 </ng-template>

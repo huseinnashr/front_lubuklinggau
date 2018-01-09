@@ -149,16 +149,16 @@ export class PostService {
   getReplyByPostId(postId: string){
     return this.http.get(`${CONFIG.API_ADDRESS}/post/${postId}/reply`)
     .map((response: Response): Reply => {
-        let reply = response.json();
+        let reply = response.json().reply;
         if (reply) {
             return reply;
         } else {
-          return null;
+          return null
         }
     })
-    .catch((error, caught): Observable<Reply> => {
-      this.snackBar.open('Gagal mendapatkan jawaban', null, { duration: 3000 });
-      return Observable.of(null);
+    .catch((error): Observable<Reply> => {
+      this.snackBar.open('Kesalahan dalam mendapatkan jawaban', null, { duration: 3000 });
+      return Observable.throw(error);
     });
   }
 

@@ -23,6 +23,7 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
   public canAnswer: boolean = false;
 
   private ngUnsubscribe: Subject<any> = new Subject();
+  public isLoading = { post: true, reply: true };
   
   constructor(
     private route:ActivatedRoute, 
@@ -35,6 +36,7 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.postId = this.route.snapshot.params['id']; 
     this.pService.getPostById(this.postId)
+      .finally(() => { this.isLoading.post = false })
       .takeUntil(this.ngUnsubscribe)
       .subscribe((post) => {
         if (!post){
@@ -45,6 +47,7 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
     });
 
     this.pService.getReplyByPostId(this.postId)
+      .finally(() => { this.isLoading.reply = false;})
       .takeUntil(this.ngUnsubscribe)
       .subscribe((reply) => {
         if (reply){

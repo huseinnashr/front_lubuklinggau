@@ -1,7 +1,11 @@
 <div class="mat-title">User Info : </div>
-<div class="mat-body-1" *ngIf="user?.usertype == 1">SUPER USER</div>
-<div class="mat-body-1">ID: {{user?.id}}</div>
-<div class="mat-body-1" *ngIf="user?.dinas && user?.usertype != 1">Dinas: {{user?.dinas.name}}</div>
-<div class="mat-body-1">Nama: {{user?.name}}</div>
-<div class="mat-body-1">Email: {{user?.email}}</div>
-<div class="mat-body-1">NIK: {{user?.nik}}</div>
+<span *ngIf="user && !isLoadingInfo">
+  <div class="mat-body-1" *ngIf="user?.usertype == 1">SUPER USER</div>
+  <div class="mat-body-1">ID: {{user?.id}}</div>
+  <div class="mat-body-1" *ngIf="user?.dinas && user?.usertype != 1">Dinas: {{user?.dinas.name}}</div>
+  <div class="mat-body-1">Nama: {{user?.name}}</div>
+  <div class="mat-body-1">Email: {{user?.email}}</div>
+  <div class="mat-body-1">NIK: {{user?.nik}}</div>
+</span>
+
+<mat-spinner *ngIf="isLoadingInfo" [color]="primary" [diameter]="48"></mat-spinner>

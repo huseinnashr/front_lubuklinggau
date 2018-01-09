@@ -17,6 +17,7 @@
           </mat-error>
         </mat-form-field>
     </div>
-    <a mat-raised-button color="primary" (click)="onMasuk()" [disabled]="!(passwordFormControl.valid && emailFormControl.valid)" style="margin-top: 8px">Masuk</a>
+    <a mat-raised-button color="primary" (click)="onMasuk()" [disabled]="!(passwordFormControl.valid && emailFormControl.valid) || isLoading" style="margin-top: 8px">Masuk</a>
     <a mat-button routerLink="/daftar">Belum punya? Daftar</a>
+    <mat-progress-bar mode="query" *ngIf="isLoading" style="margin-top:16px"></mat-progress-bar>
 </mat-card>

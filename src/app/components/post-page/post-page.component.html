@@ -2,6 +2,7 @@
 <div class="filteredPostsPreview" >
     <app-post-preview-item *ngFor="let post of filteredPosts" [post]="post"></app-post-preview-item>
 </div>
+<mat-progress-bar mode="query" *ngIf="isLoading" style="margin-bottom:16px"></mat-progress-bar>
 <mat-paginator [length]="resultlength"
   [pageSize]="query.size"
   [pageSizeOptions]="[5, 10, 25, 100]"

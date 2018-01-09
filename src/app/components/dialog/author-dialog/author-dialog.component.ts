@@ -14,6 +14,8 @@ export class AuthorDialogComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe: Subject<any> = new Subject();
   public user: User;
+  public isLoadingInfo: boolean = true;
+
   constructor(
     private admService: AdminService, 
     @Inject(MAT_DIALOG_DATA) public data,
@@ -21,6 +23,7 @@ export class AuthorDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit(){
     this.admService.getUserInfo(this.data.id)
+    .finally(() => { this.isLoadingInfo = false; })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (user) => {

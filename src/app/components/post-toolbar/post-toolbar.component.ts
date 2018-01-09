@@ -84,28 +84,14 @@ export class PostToolbarComponent implements OnDestroy{
   onDisposisi(): void{
     let dialogRef = this.dialog.open(DisposisiDialogComponent, {
       width: '300px',
-      data: { dinas: this.post.dinasId.toString() }
+      data: this.post,
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result){
-        this.post.dinasId = +result;
-        this.disposisi();
-      }
+        this.canEdit = this.getCanEdit();
     });
   }
 
-  disposisi(){
-    this.pService.disposisi(this.post)
-    .takeUntil(this.ngUnsubscribe)
-    .subscribe((data) => {
-      if (data) {
-        this.post.dinasId = data.dinasId;
-        this.post.dinas = data.dinas;
-        this.canEdit = this.getCanEdit();
-      }
-    });
-  }
   ngOnDestroy(){
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();

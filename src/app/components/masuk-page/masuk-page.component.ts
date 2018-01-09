@@ -21,6 +21,7 @@ export class MasukPageComponent implements OnDestroy {
   ]);
   
   private ngUnsubscribe: Subject<any> = new Subject();
+  public isLoading: boolean;
 
   constructor(
     private aService: AuthService,
@@ -28,7 +29,9 @@ export class MasukPageComponent implements OnDestroy {
   ){}
 
   onMasuk(){
+    this.isLoading = true;
     this.aService.login(this.emailFormControl.value, this.passwordFormControl.value)
+      .finally(() => { this.isLoading = false })
       .takeUntil(this.ngUnsubscribe)
       .subscribe(result => {
         if (result === true) {

@@ -25,6 +25,7 @@ export class CariPageComponent implements OnInit, OnDestroy {
   filteredPosts: Post[] = [];
   resultlength: number = 0;
   query: SearchQuery = new SearchQuery;
+  public isLoading = { category: true, dinas: true, search: false}
 
   private ngUnsubscribe: Subject<any> = new Subject();
 
@@ -39,6 +40,7 @@ export class CariPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(){
     this.cService.getCategories()
+    .finally(() => { this.isLoading.category = false })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (categories) => {
@@ -46,6 +48,7 @@ export class CariPageComponent implements OnInit, OnDestroy {
       }, (e) => { console.log(e); },
     );
     this.cService.getDinas()
+    .finally(() => { this.isLoading.dinas = false })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (dinas) => {
@@ -100,7 +103,9 @@ export class CariPageComponent implements OnInit, OnDestroy {
 
   getPosts(){
     this.query.req = "terbaru";
+    this.isLoading.search = true;
     this.pService.getPosts(this.tranformQuery(this.query))
+    .finally(() => { this.isLoading.search = false; })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (result) => {

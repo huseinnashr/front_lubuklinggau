@@ -2,13 +2,15 @@
 <mat-card class="filter-container">
   <mat-form-field class="category">
       <mat-select [(value)]="query.category"  placeholder="Kategori">
-        <mat-option>-- None --</mat-option>
+        <mat-option *ngIf="isLoading.category">LOADING...</mat-option>
+        <mat-option *ngIf="!isLoading.category">-- None --</mat-option>
         <mat-option *ngFor="let cat of categories" value={{cat.id}}>{{cat.name}}</mat-option>
       </mat-select>
   </mat-form-field>  
   <mat-form-field class="dinas">
       <mat-select [(value)]="query.dinasId"  placeholder="Dinas">
-        <mat-option>-- None --</mat-option>
+        <mat-option *ngIf="isLoading.dinas">LOADING...</mat-option>
+        <mat-option *ngIf="!isLoading.dinas">-- None --</mat-option>
         <mat-option *ngFor="let dinas of dinasList" value={{dinas.id}}>{{dinas.name}}</mat-option>
       </mat-select>
   </mat-form-field>
@@ -36,6 +38,7 @@
       <!-- <button mat-raised-button color="link">Cari berdasarkan lokasi</button> -->
   </div>
 </mat-card>
+<mat-progress-bar mode="query" *ngIf="isLoading.search" style="margin-top:16px"></mat-progress-bar>
 <div class="filteredPostsPreview" >
   <app-post-preview-item *ngFor="let post of filteredPosts" [post]="post"></app-post-preview-item>
 </div>

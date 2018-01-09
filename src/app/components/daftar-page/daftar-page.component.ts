@@ -36,6 +36,7 @@ export class DaftarPageComponent implements OnDestroy{
   password: string;
 
   private ngUnsubscribe: Subject<any> = new Subject();
+  public isLoading: boolean;
 
   constructor(
     private aService: AuthService, 
@@ -43,12 +44,14 @@ export class DaftarPageComponent implements OnDestroy{
   ) {}
 
   onDaftar(){
+    this.isLoading = true;
     this.aService.register(
       this.namaFormControl.value, 
       this.emailFormControl.value,
       this.nikFormControl.value, 
       this.passwordFormControl.value
     )
+    .finally(() => { this.isLoading = false })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(result => {
         if (result === true) {

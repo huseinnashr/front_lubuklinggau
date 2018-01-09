@@ -27,6 +27,7 @@ export class EditPostPageComponent implements OnInit, OnDestroy {
 
   post: Post;
   private ngUnsubscribe: Subject<any> = new Subject();
+  public isLoading = { post: true, edit: false };
 
   constructor(
     private route: ActivatedRoute,
@@ -49,6 +50,7 @@ export class EditPostPageComponent implements OnInit, OnDestroy {
       this.description = this.post.description;
     });
     this.cService.getCategories()
+    .finally(() => { this.isLoading.post = false; })
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (categories) => {
@@ -61,8 +63,9 @@ export class EditPostPageComponent implements OnInit, OnDestroy {
     this.post.title = this.titleFormControl.value;
     this.post.categoryId = +this.category;
     this.post.description = this.description;
-
+    this.isLoading.edit = true;
     this.pService.updatePost(this.post)
+    .finally(() => { this.isLoading.edit = false })
     .takeUntil(this.ngUnsubscribe)
     .subscribe((updated) => {
       if (updated){

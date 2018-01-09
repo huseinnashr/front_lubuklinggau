@@ -37,6 +37,7 @@
         </mat-form-field>
 
     </div>
-    <a mat-raised-button color="primary" (click)="onDaftar()" [disabled]="!(emailFormControl.valid && namaFormControl.valid && nikFormControl.valid && passwordFormControl.valid)" style="margin-top: 8px">Daftar</a>
+    <a mat-raised-button color="primary" (click)="onDaftar()" [disabled]="!(emailFormControl.valid && namaFormControl.valid && nikFormControl.valid && passwordFormControl.valid) || isLoading" style="margin-top: 8px">Daftar</a>
     <a mat-button routerLink="/masuk">Sudah Punya? Masuk</a>
+    <mat-progress-bar mode="query" *ngIf="isLoading" style="margin-top:16px"></mat-progress-bar>
 </mat-card>
