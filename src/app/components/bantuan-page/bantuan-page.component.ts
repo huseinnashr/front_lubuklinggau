@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/index';
 
 @Component({
   selector: 'app-bantuan-page',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BantuanPageComponent implements OnInit {
 
-  constructor() { }
+  constructor(private aService: AuthService) { }
 
   ngOnInit() {
+  }
+
+  isAdmin(){
+    return this.aService.getCurrentUser() && this.aService.getCurrentUser().usertype < 3;
   }
 
 }
