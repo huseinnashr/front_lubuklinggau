@@ -38,6 +38,7 @@ import { DisposisiDialogComponent } from './components/dialog/disposisi-dialog/d
 import { ManageCategoryComponent } from './components/manage-category/manage-category.component';
 import { ManageDinasComponent } from './components/manage-dinas/manage-dinas.component';
 import { AuthorDialogComponent } from './components/dialog/author-dialog/author-dialog.component';
+import { UserlistDialogComponent } from './components/dialog/userlist-dialog/userlist-dialog.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { AuthorDialogComponent } from './components/dialog/author-dialog/author-
     ManageCategoryComponent,
     ManageDinasComponent,
     AuthorDialogComponent,
+    UserlistDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,7 +87,7 @@ import { AuthorDialogComponent } from './components/dialog/author-dialog/author-
     AdminGuard,
     AdminService,
    ],
-  entryComponents: [ConfirmationDialogComponent, DisposisiDialogComponent, AuthorDialogComponent],
+  entryComponents: [ConfirmationDialogComponent, DisposisiDialogComponent, AuthorDialogComponent, UserlistDialogComponent],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

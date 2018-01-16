@@ -8,6 +8,7 @@
       "category"
       "dinas" 
       "keyword"
+      "self"
       "followed"
       "answered"
       "datefilter"
@@ -19,8 +20,8 @@
 @media screen and (min-width: 1170px){
   .filter-container {
     grid-template-areas: 
-      "category dinas answered followed" 
-      "category dinas datefilter datefilter" 
+      "category dinas answered self" 
+      "category dinas datefilter followed" 
       "keyword keyword dateFilter dateFilter"
       "cariBtnContainer cariBtnContainer cariBtnContainer cariBtnContainer";
 
@@ -43,6 +44,10 @@
 
 .dinas {
   grid-area: dinas;
+}
+
+.self {
+  grid-area: self;
 }
 
 .followed {

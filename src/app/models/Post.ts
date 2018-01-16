@@ -1,10 +1,12 @@
 export interface Post {
-  id: string,
+  id: number,
   title: string,
   authorId: number,
   author: { id: number, name: string },
   dinas: string,
   dinasId: number,
+  isFollowed: boolean,
+  follower: { id: number }[],
   categoryId: number,
   category: string, 
   isAnswered: boolean,
@@ -14,12 +16,13 @@ export interface Post {
 }
 
 export interface PostToolbarData {
-  id: string,
-  authorId: number,
+  id: number,
+  author: { id: number },
   dinas: string,
   dinasId: number,
   isFollowed: boolean;
   isAnswered: boolean;
+  follower: { id: number }[],
 }
 
 export interface Reply {

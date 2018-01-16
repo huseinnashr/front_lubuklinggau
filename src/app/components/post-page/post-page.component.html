@@ -1,6 +1,6 @@
 <div class="mat-display-1">{{req | titlecase}}</div>
 <div class="filteredPostsPreview" >
-    <app-post-preview-item *ngFor="let post of filteredPosts" [post]="post"></app-post-preview-item>
+    <app-post-preview-item *ngFor="let post of filteredPosts" [post]="post" [followedPost]="isFollowedPost"></app-post-preview-item>
 </div>
 <mat-progress-bar mode="query" *ngIf="isLoading" style="margin-bottom:16px"></mat-progress-bar>
 <mat-paginator [length]="resultlength"

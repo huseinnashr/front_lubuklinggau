@@ -42,7 +42,9 @@ export class AppComponent {
 
   onLogout(){
     this.aService.logout(() => {
-      this.navigator.navigate(['']);
+      this.navigator.navigate(['/masuk']).then(() => {
+        this.navigator.navigate(['']);
+      });
     });
   }
 

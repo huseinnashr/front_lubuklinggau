@@ -1,8 +1,10 @@
-<mat-icon [class.notActive]="!post?.isAnswered">check_circle</mat-icon> 
-<!-- <div style="display:inline-flex">
-  <mat-icon [class.notActive]="!post.isFollowed" (click)="onFollowed()" class="pointer">star</mat-icon>
-  <div class="mat-body-1" style="line-height: 200%">{{post.followers + post.isFollowed}}</div>
-</div> -->
+<mat-icon [class.Active]="post?.isAnswered">check_circle</mat-icon> 
+<div style="display:inline-flex">
+
+  <mat-spinner *ngIf="isLoading.follow" [color]="primary" [diameter]="24"></mat-spinner>
+  <mat-icon [class.Active]="post.isFollowed" (click)="onClickFollow()" class="pointer" *ngIf="!isLoading.follow">star</mat-icon>
+  <div class="mat-body-1" style="line-height: 200%" *ngIf="!hideFollower">{{post.follower.length}}</div>
+</div>
 <div *ngIf="isShown" style="display:inherit; width: 100%">
   <mat-icon (click)="onDisposisi()" class="pointer" *ngIf="isKominfo()">import_export</mat-icon> 
   <mat-icon class="pointer" routerLink="edit" *ngIf="canEdit">settings</mat-icon> 

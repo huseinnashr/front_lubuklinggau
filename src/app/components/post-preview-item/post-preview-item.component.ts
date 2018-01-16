@@ -13,6 +13,7 @@ import { USER_TYPE } from '../../models/index';
 export class PostPreviewItemComponent {
 
   @Input() post: Post;
+  @Input('followedPost') followedPost: boolean;
   
   constructor(
     private dialog: MatDialog,

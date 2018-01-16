@@ -1,6 +1,6 @@
 <a class="postPreviewTitle text-responsive mat-body-2" routerLink="/post/{{post.id}}">{{post?.title | titlecase}}</a>
 <div class="icon">
-    <app-post-toolbar [data]="post"></app-post-toolbar>
+    <app-post-toolbar [data]="post" [hideFollower]="followedPost"></app-post-toolbar>
 </div>
 <div class="author text-sm" [class.pointer]="aService.isAdmin()" (click)="showAuthor(post?.author.id)">{{post?.author.name}}</div>
 <div class="infoContainer text-sm">
