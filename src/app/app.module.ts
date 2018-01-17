@@ -30,7 +30,7 @@ import { ManageAdminPageComponent } from './components/manage-admin-page/manage-
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 import { UserService, PostService, CategoryService, AuthService } from './services';
-import { AuthGuard, AdminGuard, AlreadyAuthGuard } from './_guards/index';
+import { AuthGuard, AdminGuard, AlreadyAuthGuard, CanDeactivateGuard } from './_guards/index';
 import { NotfoundPageComponent } from './components/notfound-page/notfound-page.component';
 import { AdminService } from './services/admin.service';
 import { HttpModule } from '@angular/http';
@@ -82,10 +82,11 @@ import { UserlistDialogComponent } from './components/dialog/userlist-dialog/use
     { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
     AuthService,
     UserService,
+    AdminService,
     AuthGuard,
     AlreadyAuthGuard,
     AdminGuard,
-    AdminService,
+    CanDeactivateGuard,
    ],
   entryComponents: [ConfirmationDialogComponent, DisposisiDialogComponent, AuthorDialogComponent, UserlistDialogComponent],
   bootstrap: [ AppComponent ]
