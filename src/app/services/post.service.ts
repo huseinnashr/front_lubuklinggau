@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { CONFIG } from '../_config/index';
 import { MatSnackBar } from '@angular/material';
 import { AuthService } from './auth.service';
+import { CurrentUser } from '../models/index';
 
 @Injectable()
 export class PostService {
@@ -14,6 +15,16 @@ export class PostService {
     private snackBar: MatSnackBar,
     private aService: AuthService,
   ) { }
+
+  private isFollowed(user: CurrentUser, followers: { id: number }[]): boolean {
+    if (!user) return false;
+    if (user.usertype < 3) return false;
+    const userId = user.id;
+    for ( let i = 0; i < followers.length; i++ ){
+      if (followers[i].id == userId) return true;
+    }  
+    return false;
+  }
 
   getPosts(filters, showSnackbar = true): Observable<{rows: Post[], count: number}> {
     const headers = new Headers();
@@ -26,6 +37,7 @@ export class PostService {
             res.rows.map((post) => {
               post.category = post.category.name;
               post.dinas = post.dinas.name;
+              post.isFollowed = this.isFollowed(this.aService.getCurrentUser(), post.follower);
               return post;
             })
             return res;
@@ -64,6 +76,7 @@ export class PostService {
         if (post) {
             post.category = post.category.name;
             post.dinas = post.dinas.name;
+            post.isFollowed = this.isFollowed(this.aService.getCurrentUser(), post.follower);
             return post;
         } else {
           return null;
@@ -125,6 +138,22 @@ export class PostService {
     .catch((error, caught): Observable<{ dinasId: number, dinas: string }> => {
       this.snackBar.open('Gagal disposisi', null, { duration: 3000 });
       return Observable.of(null);
+    });
+  }
+
+  follow(postId: number): Observable<{following: boolean, follower: {id: number}[]}> {
+    return this.http.post(`${CONFIG.API_ADDRESS}/post/${postId}/follow`, {}, this.aService.getHeader())
+    .map((response: Response): {following: boolean, follower: {id: number}[]} => {
+        let result = response.json();
+        let msg = result.following ? 'Berhasil mengikuti post' : 'Berhasil berhenti mengikuti post';
+        this.snackBar.open(msg, null, { duration: 3000 });
+        return result;
+    })
+    .catch((error): Observable<{following: boolean, follower: {id: number}[]}> => {
+      let err = error.json();
+      let msg = !err.isLoggedIn ? 'Kamu harus masuk untuk mengikuti post' : err.message || 'Kesalahan dalam aksi mengikuti post';
+      this.snackBar.open(msg, null, { duration: 3000 });
+      return Observable.throw(msg);
     });
   }
 

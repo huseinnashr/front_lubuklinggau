@@ -22,6 +22,18 @@
 
 <div class="separator"></div>
 
+<span *ngIf="canPost()">
+  <div class="section-title">
+    <div class="mat-headline filler">Post Yang diikuti</div>
+    <a mat-raised-button routerLink="/post" [queryParams]="{ req: 'Post Yang Diikuti' }">selengkapnya ...</a>
+  </div>
+  <mat-progress-bar mode="query" *ngIf="isLoading.followedPost"></mat-progress-bar>
+  <div *ngIf="!followedPost && !isLoading.followedPost">Tidak ada</div>
+  <app-post-preview-item *ngFor="let post of followedPost" [post]="post" [followedPost]="true"></app-post-preview-item>
+</span>
+
+<div class="separator"></div>
+
 <div class="section-title">
     <div class="mat-headline">Terbaru</div><div class="filler"></div>
     <a mat-raised-button routerLink="/post" [queryParams]="{ req: 'terbaru'}">selengkapnya ...</a>

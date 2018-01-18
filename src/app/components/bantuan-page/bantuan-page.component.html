@@ -14,23 +14,60 @@
 				<div class="mat-body-1">Buat post baru</div>
 				<mat-icon>check_circle</mat-icon> 
 				<div class="mat-body-1">Post sudah dijawab</div>
-				<!-- <div style="display:inline-flex">
+				<div style="display:inline-flex">
 					<mat-icon>star</mat-icon>
 					<div class="mat-caption" style="line-height: 200%">20</div>
 				</div>
-				<div class="mat-body-1">ada 20 orang bertanya mengenai Post tersebut. Tap + jika ingin menanyakan hal yang sama.</div>
-				<mat-icon>flag</mat-icon> 
+				<div class="mat-body-1" *ngIf="!isAdmin()">ada 20 orang mengikuti Post tersebut. Tap + jika ingin mengikuti (menyimpan) post tersebut</div>
+				<div class="mat-body-1" *ngIf="isAdmin()">ada 20 orang mengikuti Post tersebut. Tap + untuk melihat daftar user yang mengikuti post tersebut</div>
+				<!-- <mat-icon>flag</mat-icon> 
 				<div class="mat-body-1">Lapor Post yang mengandung SARA, bully, offensive dan tidak sesuai aturan</div> -->
 				<mat-icon>settings</mat-icon> 
 				<div class="mat-body-1">Edit Post / jawaban</div>
-				<mat-icon>import_export</mat-icon> 
-				<div class="mat-body-1">Disposisi / batalkan disposisi Post</div>
+				<mat-icon *ngIf="isAdmin()">import_export</mat-icon> 
+				<div class="mat-body-1" *ngIf="isAdmin()">Disposisi / batalkan disposisi Post</div>
 				<mat-icon>delete_forever</mat-icon> 
 				<div class="mat-body-1">Hapus Post / jawaban</div>
 		</div>
+  </mat-expansion-panel>
+  
+  <mat-expansion-panel *ngIf="isAdmin()">
+		<mat-expansion-panel-header>
+			<mat-panel-title>
+				Hak - Hak User
+			</mat-panel-title>
+		</mat-expansion-panel-header>
+
+		<div class="HelpPanel help-post">
+      <div class="mat-body-1">1</div>
+			<div>
+					<div class="mat-body-2">SuperUser</div>
+					<div class="mat-body-1">Kelola Admin - Tambah/Edit Kategori - Tambah/Edit Dinas - Lihat Info Akun Sendiri - Lihat Info User - Lihat Daftar User Yang Mengikuti Post.</div>
+      </div>
+      <div class="mat-body-1">2</div>
+			<div>
+					<div class="mat-body-2">Admin Kominfo</div>
+					<div class="mat-body-1">Hak SuperUser, tetapi tidak bisa mengelola admin kominfo lain - Disposisi Post - Edit/Delete Post, Tambah Jawaban dan Edit/Delete Jawaban untuk Post dengan Dinas Kominfo.</div>
+      </div>
+      <div class="mat-body-1">3</div>
+			<div>
+					<div class="mat-body-2">Admin Dinas Lain</div>
+					<div class="mat-body-1">Lihat Info Akun Sendiri - Lihat Info User - Lihat Daftar User Yang Mengikuti Post - Edit/Delete Post, Tambah Jawaban dan Edit/Delete Jawaban untuk Post dengan Dinas yang Sesuai dengan Akun.</div>
+      </div>
+      <div class="mat-body-1">4</div>
+			<div>
+					<div class="mat-body-2">Regular User (user)</div>
+					<div class="mat-body-1">Lihat Info Akun Sendiri - Tambah Post - Edit/Delete Post - Ikut (Simpan) Post.</div>
+      </div>
+      <div class="mat-body-1">5</div>
+			<div>
+					<div class="mat-body-2">Guest (pengunjung yang belum login)</div>
+					<div class="mat-body-1">Lihat Post dan Jawaban - Cari Post</div>
+      </div>
+		</div>
 	</mat-expansion-panel>
 
-	<mat-expansion-panel>
+	<mat-expansion-panel *ngIf="!isAdmin()">
 		<mat-expansion-panel-header>
 			<mat-panel-title>
 				Aturan Buat Post
@@ -47,9 +84,21 @@
 					<div class="mat-body-2">Contoh judul: Apakah ada subsidi untuk pembelian panel surya?</div>
 			</div>
 		</div>
-	</mat-expansion-panel>
+  </mat-expansion-panel>
+  
+	<mat-expansion-panel *ngIf="isAdmin()">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Disposisi Post
+      </mat-panel-title>
+    </mat-expansion-panel-header>
 
-	<mat-expansion-panel>
+    <div class="HelpPanel">
+        Disposisi post dilakukan oleh admin kominfo jika post dinilai terlalu spesifik dan perlu dijawab oleh dinas terkait.
+    </div>
+  </mat-expansion-panel>
+
+	<mat-expansion-panel *ngIf="!isAdmin()">
 			<mat-expansion-panel-header>
 				<mat-panel-title>
 					Mengganti Dinas Post
@@ -57,8 +106,8 @@
 			</mat-expansion-panel-header>
 	
 			<div class="HelpPanel">
-					Post yang baru diajukan otomatis masuk ke dinas kominfo(umum). Post hanya bisa dipindahkan (didisposisi) oleh admin.
+					Post yang baru diajukan otomatis masuk ke dinas kominfo(umum). Post hanya bisa dipindahkan (didisposisi) oleh admin kominfo.
 			</div>
-		</mat-expansion-panel>
+  </mat-expansion-panel>
 
 </mat-accordion>

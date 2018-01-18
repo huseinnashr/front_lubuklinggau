@@ -1,9 +1,18 @@
-.notActive {
-  color: lightgray;
+.Active {
+  color: #2196f3;
 }
 
-.pointer {
+.pointer.Active:hover {
+  color: #68aee7 !important;
+}
+
+mat-icon {
+  color: #888888;
+}
+
+.pointer:hover {
   cursor: pointer;
+  color: #2196f3;
 }
 
 :host {

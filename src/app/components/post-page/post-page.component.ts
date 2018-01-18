@@ -22,6 +22,7 @@ export class PostPageComponent implements OnInit, OnDestroy {
   query: PostQuery = new PostQuery();
   private ngUnsubscribe: Subject<any> = new Subject();
   public isLoading: boolean = true;
+  public isFollowedPost: boolean; // For BACKEND Query WHERE BUG.
 
   constructor(
     private route: ActivatedRoute, 
@@ -59,10 +60,19 @@ export class PostPageComponent implements OnInit, OnDestroy {
       if (this.aService.getCurrentUser() == null) {
         this.navigator.navigate(['/404']);
       } else {
-        query = { req: 'terbaru', authorId: this.aService.getCurrentUser().id, offset: this.query.page * this.query.size };
+        query = { req: 'terbaru', authorId: this.aService.getCurrentUser().id, self: true, offset: this.query.page * this.query.size };
       }
     } 
     
+    else if (this.req == "Post Yang Diikuti") {
+      this.isFollowedPost = true;
+      if (this.aService.getCurrentUser() == null) {
+        this.navigator.navigate(['/404']);
+      } else {
+        query = { req: 'terbaru', authorId: this.aService.getCurrentUser().id, followed: true, offset: this.query.page * this.query.size };
+      }
+    } 
+
     else if (this.req == "terbaru"){
       query = { 
         req: this.req, size: this.query.size, offset: this.query.page * this.query.size

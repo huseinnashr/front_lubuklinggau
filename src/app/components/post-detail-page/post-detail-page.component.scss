@@ -35,8 +35,15 @@
   text-decoration: underline;
 }
 
-.pointer {
+.showAuthor {
   cursor: pointer;
 }
 
+.pointer {
+  cursor: pointer;
+  color: #2196f3;
+}
 
+mat-icon {
+  color: #888888;
+}

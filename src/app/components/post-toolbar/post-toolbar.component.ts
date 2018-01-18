@@ -3,10 +3,11 @@ import { PostToolbarData } from '../../models/Post';
 import { AuthService, PostService, CategoryService } from '../../services/index';
 import { USER_TYPE } from '../../models/index';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { DisposisiDialogComponent } from '../dialog/disposisi-dialog/disposisi-dialog.component';
 import { Subject } from 'rxjs';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { UserlistDialogComponent } from '../dialog/userlist-dialog/userlist-dialog.component';
 
 @Component({
   selector: 'app-post-toolbar',
@@ -16,23 +17,23 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 export class PostToolbarComponent implements OnDestroy{
 
   @Input("isShown") isShown: boolean;
+  @Input("hideFollower") hideFollower: boolean;
   @Input("data") post: PostToolbarData;
 
   canEdit: boolean;
   private ngUnsubscribe: Subject<any> = new Subject();
-  public isLoading = { delete: false };
+  public isLoading = { delete: false, follow: false };
 
   getCanEdit(){
     if (this.aService.getCurrentUser() == null) return false;
     if (this.aService.getCurrentUser().usertype == USER_TYPE.REGULAR) {
-      return this.post.authorId == this.aService.getCurrentUser().id;
+      return this.post.author.id == this.aService.getCurrentUser().id;
     } else if (this.aService.getCurrentUser().usertype == USER_TYPE.ADMIN){
       return this.post.dinasId == this.aService.getCurrentUser().dinas.id;
     } {
       return false;
     }
   }
-
 
   isKominfo(){
     if (this.aService.getCurrentUser() == null) return false;
@@ -47,6 +48,7 @@ export class PostToolbarComponent implements OnDestroy{
     private pService: PostService, 
     private navigator: Router,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnChanges(){
@@ -54,8 +56,27 @@ export class PostToolbarComponent implements OnDestroy{
       this.canEdit = this.getCanEdit();
   }
 
-  onFollowed(){
-    this.post.isFollowed = !this.post.isFollowed;
+  onFollow(){
+    this.isLoading.follow = true;
+    this.pService.follow(this.post.id)
+    .finally(() => { this.isLoading.follow = false })
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe((res) => {
+      this.post.isFollowed = res.following;
+      this.post.follower = res.follower;
+    });
+  }
+
+  onClickFollow(){
+    if(this.aService.getCurrentUser() == null || (this.aService.getCurrentUser().usertype == 3 && this.aService.getCurrentUser().id != this.post.author.id)) {
+      this.onFollow();
+    } else if (this.post.author.id == this.aService.getCurrentUser().id){
+      this.snackBar.open('Tidak bisa mengikuti post sendiri', null, { duration: 3000 });
+    } else {
+      this.dialog.open(UserlistDialogComponent, {
+        data: { ids: this.post.follower },
+      });
+    }
   }
 
   onDelete(){

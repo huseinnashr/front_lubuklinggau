@@ -80,4 +80,27 @@ export class AdminService {
       return Observable.throw(error);
     });
   }
+
+  getUsersInfo(users: { id: number }[]): Observable<User[]> {
+    let ids = users.map(user => user.id);
+    return this.http.post(`${CONFIG.API_ADDRESS}/user/search`, { ids }, this.aService.getHeader())
+    .map((response: Response): User[] => {
+      let users = response.json().users;
+      if (users) {
+        return users;
+      } else {
+        this.snackBar.open(response.json().message, null, { duration: 3000 });
+        throw new Error();
+      }
+    })
+    .catch((error): Observable<User[]> => {
+      if (typeof error.status !== 'undefined'){
+        this.snackBar.open(error.json().message, null, { duration: 3000 });
+        return Observable.throw(error);
+      } else {
+        this.snackBar.open('Kesalahan dalam mendapatkan info user', null, { duration: 3000 });
+        return Observable.throw(null);
+      }        
+    });
+  }
 }

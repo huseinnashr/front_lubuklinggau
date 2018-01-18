@@ -13,7 +13,7 @@ import { ManageAdminPageComponent } from './components/manage-admin-page/manage-
 import { TambahJawabanPageComponent } from './components/tambah-jawaban-page/tambah-jawaban-page.component';
 import { EditJawabanPageComponent } from './components/edit-jawaban-page/edit-jawaban-page.component';
 import { EditPostPageComponent } from './components/edit-post-page/edit-post-page.component';
-import { AuthGuard, AdminGuard, AlreadyAuthGuard } from './_guards/index';
+import { AuthGuard, AdminGuard, AlreadyAuthGuard, CanDeactivateGuard } from './_guards/index';
 import { NotfoundPageComponent } from './components/notfound-page/notfound-page.component';
 import { ManageCategoryComponent } from './components/manage-category/manage-category.component';
 import { ManageDinasComponent } from './components/manage-dinas/manage-dinas.component';
@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'kelola-kategori', component: ManageCategoryComponent, canActivate: [AdminGuard] },
   { path: 'kelola-dinas', component: ManageDinasComponent, canActivate: [AdminGuard] },
   { path: 'bantuan', component: BantuanPageComponent },
-  { path: 'post/tambah', component: TambahPostPageComponent, canActivate: [AuthGuard]},
+  { path: 'post/tambah', component: TambahPostPageComponent, canActivate: [AuthGuard], canDeactivate: [CanDeactivateGuard]},
   { path: 'post', component: PostPageComponent },
   { path: 'post/:id', component: PostDetailPageComponent },
   { path: 'post/:id/edit', component: EditPostPageComponent, canActivate: [AuthGuard] },

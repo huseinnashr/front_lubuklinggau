@@ -26,6 +26,7 @@ export class CariPageComponent implements OnInit, OnDestroy {
   resultlength: number = 0;
   query: SearchQuery = new SearchQuery;
   public isLoading = { category: true, dinas: true, search: false}
+  public isFollowed: boolean;
 
   private ngUnsubscribe: Subject<any> = new Subject();
 
@@ -64,6 +65,7 @@ export class CariPageComponent implements OnInit, OnDestroy {
     this.query.dinasId = paramQuery.get('dinasId');
     this.query.title = paramQuery.get('title');
     this.query.isAnswered = paramQuery.get('isAnswered') == "true" ? true : null;
+    this.query.self = paramQuery.get('self') == "true" ? true : null;
     this.query.followed = paramQuery.get('followed') == "true" ? true : null;
     this.query.datefilter = paramQuery.get('datefilter') == "true" ? true : null;
     this.query.page = paramQuery.get('page') ? +paramQuery.get('page') : 0;
@@ -73,19 +75,20 @@ export class CariPageComponent implements OnInit, OnDestroy {
     let dateUntil = paramQuery.get('dateuntil') == null ? new Date() : new Date(+paramQuery.get('dateuntil'));
     this.dateFrom = new FormControl(dateFrom);
     this.dateUntil = new FormControl(dateUntil);
-
     if (this.query.datefilter){
       this.query.datefrom = `${this.dateFrom.value.getTime()}`;
       this.query.dateuntil = `${this.dateUntil.value.getTime()}`;
     }
 
-    if (paramQuery.get('s') == "1")
+    if (paramQuery.get('s') == "1"){
       this.getPosts();
+    }
   }
 
   onSearch() {
-    let query = this.processQueryParams(); 
     this.navigator.navigate(['/cari'], {queryParams: this.query});
+    let query = this.processQueryParams(); 
+    this.isFollowed = this.query.followed;
     this.getPosts();
   }
 
@@ -117,7 +120,9 @@ export class CariPageComponent implements OnInit, OnDestroy {
 
   tranformQuery(query: SearchQuery){
     return {
-      authorId: query.followed? this.isLoggedIn()? this.aService.getCurrentUser().id: null : null,
+      authorId: query.self || query.followed ? this.isLoggedIn()? this.aService.getCurrentUser().id: null: null,
+      self: query.self,
+      followed: query.followed,
       categoryId: query.category,
       dinasId: query.dinasId,
       title: query.title,
@@ -133,6 +138,9 @@ export class CariPageComponent implements OnInit, OnDestroy {
   private processQueryParams(){
     if (!this.query.isAnswered)
       this.query.isAnswered = null;
+
+    if (!this.query.self)
+      this.query.self = null;
 
     if (!this.query.followed)
       this.query.followed = null;
@@ -164,6 +172,7 @@ class SearchQuery {
   category: string;
   dinasId: string;
   title: string;
+  self: boolean;
   followed: boolean;
   isAnswered: boolean;
   datefilter: boolean;

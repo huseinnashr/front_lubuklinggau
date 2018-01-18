@@ -44,7 +44,7 @@ export class TambahPostPageComponent implements OnInit, OnDestroy {
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (postId) => {
-        if (postId != -1){
+        if (postId > 0){
           this.navigator.navigate([`/post/${postId}`]);
         }
       },
@@ -57,5 +57,9 @@ export class TambahPostPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  canDeactivate(){
+    return !(this.titleFormControl.dirty || this.category != null || this.description != null);
   }
 }

@@ -14,8 +14,10 @@ export class UtamaPageComponent implements OnInit, OnDestroy {
 
   public posts: Post[];
   public customizedPost: Post[];
+  public followedPost: Post[];
   public customizedFilter;
-  public isLoading = { post: true, customizedPost: true };
+  public followedPostFilter;
+  public isLoading = { post: true, customizedPost: true, followedPost: true };
 
   constructor(private pService: PostService, private aService: AuthService) { }
   private ngUnsubscribe: Subject<any> = new Subject();
@@ -33,7 +35,8 @@ export class UtamaPageComponent implements OnInit, OnDestroy {
     if (this.isAdmin()) {
       this.customizedFilter = { req: 'terbaru', size: 5, isAnswered: false, dinasId: this.aService.getCurrentUser().dinas.id };
     } else if (this.canPost()) {
-      this.customizedFilter = { req: 'terbaru', size: 5, authorId: this.aService.getCurrentUser().id };
+      this.customizedFilter = { req: 'terbaru', size: 5, authorId: this.aService.getCurrentUser().id, self: true };
+      this.followedPostFilter = { req: 'terbaru', size: 5, authorId: this.aService.getCurrentUser().id, followed: true };
     }
 
     if (this.customizedFilter){
@@ -47,6 +50,19 @@ export class UtamaPageComponent implements OnInit, OnDestroy {
         },
       )
     }
+
+    if (this.followedPostFilter){
+      this.pService.getPosts(this.followedPostFilter, false)
+      .finally(() => { this.isLoading.followedPost = false })
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(
+        (result) => {
+          if(result)
+            this.followedPost = result.rows;
+        },
+      )
+    }
+    
   }
 
   isAdmin(){

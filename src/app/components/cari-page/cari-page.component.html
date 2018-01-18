@@ -17,7 +17,8 @@
   <mat-form-field class="keyword">
       <input matInput placeholder="Judul Post" [(ngModel)]="query.title" type="text">
   </mat-form-field>
-  <mat-checkbox *ngIf="isLoggedIn() && isRegular()" [(ngModel)]="query.followed" class="followed">Post sendiri</mat-checkbox>
+  <mat-checkbox *ngIf="isLoggedIn() && isRegular()" [(ngModel)]="query.self" class="self" [disabled]="query.followed">Post sendiri</mat-checkbox>
+  <mat-checkbox *ngIf="isLoggedIn() && isRegular()" [(ngModel)]="query.followed" class="followed" [disabled]="query.self">Post yang diikuti</mat-checkbox>
   <mat-checkbox [(ngModel)]="query.isAnswered" class="answered">Hanya Terjawab</mat-checkbox>
   <mat-checkbox [(ngModel)]="query.datefilter" class="datefilter">Saring Berdasarkan Tanggal</mat-checkbox>
   <div *ngIf="query.datefilter" class="dateFilter">
@@ -40,7 +41,7 @@
 </mat-card>
 <mat-progress-bar mode="query" *ngIf="isLoading.search" style="margin-top:16px"></mat-progress-bar>
 <div class="filteredPostsPreview" >
-  <app-post-preview-item *ngFor="let post of filteredPosts" [post]="post"></app-post-preview-item>
+  <app-post-preview-item *ngFor="let post of filteredPosts" [post]="post" [followedPost]="isFollowed"></app-post-preview-item>
 </div>
 <mat-paginator [length]="resultlength"
               [pageSize]="query.size"

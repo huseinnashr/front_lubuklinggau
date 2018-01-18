@@ -1,0 +1,54 @@
+.follower-container {
+  display: inline-flex;
+  flex-direction: column;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.follower-item {
+  display: grid;
+  grid-template-areas: 
+    "id name email"
+    "id nik nik";
+  grid-template-columns: 16px auto auto;
+  grid-column-gap: 8px;
+  margin: 2px 2px;
+  padding: 8px;
+  min-width: 224px;
+  border-radius: 2px;
+}
+
+@media screen and (max-width: 500px){
+  .follower-item {
+    grid-column-gap: 4px;
+    grid-template-areas: 
+    "id name"
+    "id email"
+    "id nik";
+  }
+}
+
+@media screen and (min-width: 760px){
+  .follower-item {
+    grid-column-gap: 16px;
+    grid-template-columns: 16px 163px auto 126px;
+    grid-template-areas: 
+    "id name email nik";
+  }
+}
+
+.id {
+  grid-area: id;
+}
+
+.name {
+  grid-area: name;
+}
+
+.email {
+  grid-area: email;
+}
+
+.nik {
+  grid-area: nik;
+}

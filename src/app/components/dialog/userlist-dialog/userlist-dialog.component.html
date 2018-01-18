@@ -1,0 +1,12 @@
+<div class="mat-title">Pengikut: </div>
+<div *ngIf="users && !isLoadingInfo" class="follower-container">
+    <div *ngFor="let user of users" class="follower-item mat-elevation-z1">
+        <div class="mat-body-1 id">{{user?.id}}</div>
+        <div class="mat-body-1 name">{{user?.name}}</div>
+        <div class="mat-body-1 email">{{user?.email}}</div>
+        <div class="mat-body-1 nik">{{user?.nik}}</div>
+      </div>
+</div>
+
+<div *ngIf="!isLoadingInfo && !users">Tidak ada</div>
+<mat-spinner *ngIf="isLoadingInfo" [color]="primary" [diameter]="48"></mat-spinner>
