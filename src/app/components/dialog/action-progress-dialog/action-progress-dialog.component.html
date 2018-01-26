@@ -1,6 +1,6 @@
 <div class="mat-headline-1">{{data.description}}</div>
 <div>{{data.bytes.loaded}} KB / {{data.bytes.total}} KB</div>
-<mat-progress-bar [mode]="determinate" [value]="data.progress" style="margin: 16px 0px"></mat-progress-bar>
+<mat-progress-bar mode="determinate" [value]="data.progress" style="margin: 16px 0px"></mat-progress-bar>
 <div class="button">
   <button mat-button cdkFocusInitial [mat-dialog-close]="true">Batal</button>
 </div>
