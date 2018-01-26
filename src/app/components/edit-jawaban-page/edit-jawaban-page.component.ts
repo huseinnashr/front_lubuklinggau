@@ -4,6 +4,7 @@ import { Post, Reply } from '../../models/Post';
 import { PostService } from '../../services/post.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
+import { Quill } from 'quill';
 
 @Component({
   selector: 'app-edit-jawaban-page',
@@ -13,13 +14,9 @@ import { Subject } from 'rxjs';
 
 export class EditJawabanPageComponent implements OnInit, OnDestroy {
   
-  jawabanFormControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(15),
-  ]);
-
   post: Post;
   reply: Reply;
+  quill: Quill;
 
   private ngUnsubscribe: Subject<any> = new Subject();
   public isLoading = { reply: true,  edit: false }
@@ -42,16 +39,20 @@ export class EditJawabanPageComponent implements OnInit, OnDestroy {
     .subscribe((reply) => {
       if (reply){
         this.reply = reply;
-        this.jawabanFormControl.setValue(this.reply.body);
       } else {
         this.navigator.navigate([`/post/${postId}`]);
       }
     });
   }
 
+  onTextEditorCreated($event: Quill){
+    this.quill = $event;
+    this.quill.setContents(JSON.parse(this.reply.body));
+  }
+
   onEditJawaban(){
     this.isLoading.edit = true;
-    this.reply.body = this.jawabanFormControl.value;
+    this.reply.body = JSON.stringify(this.quill.getContents());
     this.pService.updateReply(this.reply, this.post)
     .finally(() => { this.isLoading.edit = false } )
     .takeUntil(this.ngUnsubscribe)

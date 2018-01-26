@@ -3,18 +3,35 @@ import { Post, Reply } from '../models/Post';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { CONFIG } from '../_config/index';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { AuthService } from './auth.service';
 import { CurrentUser } from '../models/index';
+import { HttpClient, HttpErrorResponse, HttpEventType, HttpResponse, HttpRequest } from '@angular/common/http';
+import { ActionProgressDialogComponent } from '../components/dialog/action-progress-dialog/action-progress-dialog.component';
 
 @Injectable()
 export class PostService {
 
   constructor(
-    public http: Http, 
+    public http: Http,
+    public http_: HttpClient,
     private snackBar: MatSnackBar,
     private aService: AuthService,
+    public dialog: MatDialog,
   ) { }
+
+  handleError(err: HttpErrorResponse, action: String): Observable<any> {
+    if (err instanceof Error){
+      console.log(err);
+    } else if (err.error instanceof Error) {
+      console.log(err.error.message);
+    } else {
+      let error = err.error;
+      let msg = error.isLoggedOut ? `Kamu harus masuk untuk ${action}` : error.message || `Kesalahan dalam aksi ${action}`;
+      this.snackBar.open(msg, null, { duration: 3000 });
+    }
+    return Observable.empty();
+  }
 
   private isFollowed(user: CurrentUser, followers: { id: number }[]): boolean {
     if (!user) return false;
@@ -24,6 +41,39 @@ export class PostService {
       if (followers[i].id == userId) return true;
     }  
     return false;
+  }
+
+  uploadImage(files: FileList): Observable<String[]>{
+    let formData = new FormData();
+    for (let i = 0; i < files.length; i++){
+      formData.append('image', files.item(i));
+    }
+    const dialogData = { description: `Mengunggah ${files.length} gambar`, progress: 0, bytes: {loaded: 0, total: 0 }};
+    const dialogRef = this.dialog.open(ActionProgressDialogComponent, {
+      disableClose: true,
+      width: '300px',
+      data: dialogData,
+    });
+    const req = new HttpRequest('POST', `${CONFIG.API_ADDRESS}/image/`, formData, { headers: this.aService.getMultipartHeader_(), reportProgress: true });
+    return this.http_.request(req)
+    .map((event: any): String[] => {
+      if (event.type === HttpEventType.UploadProgress) {
+        dialogData.progress = Math.round(100 * event.loaded / event.total);
+        dialogData.bytes.loaded = Math.round(event.loaded / 1000);
+        dialogData.bytes.total = Math.round(event.total / 1000);
+        return [];
+      } else if (event.type === HttpEventType.Response) {
+        dialogRef.close();
+        return event.body.map((res) => `${CONFIG.API_ADDRESS}/public/images/${res}`);
+      } else {
+        return [];
+      }
+    })
+    .catch((error) => { 
+      dialogRef.close();
+      return this.handleError(error, 'Upload Gambar');
+    })
+    .takeUntil(dialogRef.afterClosed().first());
   }
 
   getPosts(filters, showSnackbar = true): Observable<{rows: Post[], count: number}> {
@@ -224,5 +274,4 @@ export class PostService {
       return Observable.of(false);
     });
   }
-
 }

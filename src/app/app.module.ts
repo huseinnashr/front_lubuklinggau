@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
 
 import { AppComponent } from './app.component';
 import { BantuanPageComponent } from './components/bantuan-page/bantuan-page.component';
@@ -39,6 +40,9 @@ import { ManageCategoryComponent } from './components/manage-category/manage-cat
 import { ManageDinasComponent } from './components/manage-dinas/manage-dinas.component';
 import { AuthorDialogComponent } from './components/dialog/author-dialog/author-dialog.component';
 import { UserlistDialogComponent } from './components/dialog/userlist-dialog/userlist-dialog.component';
+import { TextEditorComponent } from './components/text-editor/text-editor.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ActionProgressDialogComponent } from './components/dialog/action-progress-dialog/action-progress-dialog.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +69,8 @@ import { UserlistDialogComponent } from './components/dialog/userlist-dialog/use
     ManageDinasComponent,
     AuthorDialogComponent,
     UserlistDialogComponent,
+    TextEditorComponent,
+    ActionProgressDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,6 +80,8 @@ import { UserlistDialogComponent } from './components/dialog/userlist-dialog/use
     BrowserAnimationsModule,
     MaterialModule,
     HttpModule,
+    QuillModule,
+    HttpClientModule,
   ],
   providers: [ 
     PostService, 
@@ -88,7 +96,7 @@ import { UserlistDialogComponent } from './components/dialog/userlist-dialog/use
     AdminGuard,
     CanDeactivateGuard,
    ],
-  entryComponents: [ConfirmationDialogComponent, DisposisiDialogComponent, AuthorDialogComponent, UserlistDialogComponent],
+  entryComponents: [ConfirmationDialogComponent, DisposisiDialogComponent, AuthorDialogComponent, UserlistDialogComponent, ActionProgressDialogComponent],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

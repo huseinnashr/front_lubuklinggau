@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Post, Reply } from '../../models/Post';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from '../../services/post.service';
@@ -8,6 +8,9 @@ import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { AuthorDialogComponent } from '../dialog/author-dialog/author-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { Quill } from 'quill';
+import * as q from 'quill';
+const quill: any = q;
 
 @Component({
   selector: 'app-post-detail-page',
@@ -20,7 +23,9 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
   public post: Post;
   private postId: string;
   public reply: Reply;
+  public description: string;
   public canAnswer: boolean = false;
+  quillInstance: Quill;
 
   private ngUnsubscribe: Subject<any> = new Subject();
   public isLoading = { post: true, reply: true };
@@ -43,6 +48,13 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
           this.navigator.navigate(['/404']);
         } else {
           this.post = post;
+          const delta = JSON.parse(this.post.description);
+          if (delta.ops.length != 1 || delta.ops[0].insert != '\n'){
+            this.quillInstance.setContents(delta);
+            this.post.description = this.quillInstance.root.innerHTML;
+          } else {
+            this.post.description = null;
+          }
         }
     });
 
@@ -52,8 +64,19 @@ export class PostDetailPageComponent implements OnInit, OnDestroy {
       .subscribe((reply) => {
         if (reply){
           this.reply = reply;
+          const delta = JSON.parse(this.reply.body);
+          if (delta.ops.length != 1 || delta.ops[0].insert != '\n'){
+            this.quillInstance.setContents(delta);
+            this.reply.body = this.quillInstance.root.innerHTML;
+          } else {
+            this.reply.body = null;
+          }
         }
     });
+  }
+
+  ngAfterViewInit(){
+    this.quillInstance = new quill(document.getElementById("quill"));
   }
 
   onDeleteReply(){

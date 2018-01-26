@@ -1,0 +1,8 @@
+<quill-editor
+  [placeholder]="placeholder"
+  [readOnly]="placeholder == null"
+  [modules]="{ toolbar: toolbarOptions }"
+  [bounds]="bounds"
+  [style]="style"
+  (onEditorCreated)="getQuill($event)">
+</quill-editor>

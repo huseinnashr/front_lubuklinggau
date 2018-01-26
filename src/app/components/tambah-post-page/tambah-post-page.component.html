@@ -1,9 +1,9 @@
-<div class="mat-display-1" style="margin-bottom:16px">Tambah Post</div>
+<div class="mat-display-1" style="margin-bottom:16px" #p>Tambah Post</div>
 <mat-card class="add-post-container">
   <mat-form-field class="title">
     <input matInput placeholder="Judul" minlength="15" type="text" [formControl]="titleFormControl" required>
     <mat-error *ngIf="titleFormControl.hasError('required') || titleFormControl.hasError('minlength')">
-        Judul <strong>diperlukan</strong> dengan panjang minimum 15 karakter.
+        Judul <strong>diperlukan</strong> minimum 15 karakter.
     </mat-error>
   </mat-form-field>
   <mat-form-field class="keyword">
@@ -11,9 +11,7 @@
         <mat-option *ngFor="let cat of categories" value={{cat.id}}>{{cat.name}}</mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field class="description">
-    <textarea matInput placeholder="Deskripsi" matTextareaAutosize matAutosizeMinRows="10" [(ngModel)]="description"></textarea>
-  </mat-form-field>
+  <text-editor class="description" [bounds]="p" placeholder="Tambahkan deskripsi..." (onCreated)="onTextEditorCreated($event)"></text-editor>
 
   <div class="add-btn-container">
       <button mat-raised-button color="primary" (click)="onTambahPost()" [disabled]="!titleFormControl.valid || !category">Tambah</button>

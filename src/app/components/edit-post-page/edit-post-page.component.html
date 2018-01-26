@@ -1,5 +1,5 @@
-<div class="mat-display-1" style="margin-bottom:16px">Edit Post</div>
-<mat-card>
+<div class="mat-display-1" style="margin-bottom:16px" #p>Edit Post</div>
+<mat-card style="margin-bottom:28px">
   <mat-progress-bar mode="query" *ngIf="isLoading.post" style="margin-bottom:16px"></mat-progress-bar>
   <span class="add-post-container" *ngIf="!isLoading.post">
     <mat-form-field class="title">
@@ -13,9 +13,7 @@
           <mat-option *ngFor="let cat of categories" value={{cat.id}}>{{cat.name}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="description">
-      <textarea matInput placeholder="Deskripsi" matTextareaAutosize matAutosizeMinRows="10" [(ngModel)]="description"></textarea>
-    </mat-form-field>
+    <text-editor class="description" [bounds]="p" placeholder="Tambahkan deskripsi..." (onCreated)="onTextEditorCreated($event)"></text-editor>
   </span>
   <div class="edit-btn-container">
       <button mat-raised-button color="primary" (click)="onEditPost()" [disabled]="!titleFormControl.valid || !category || isLoading.post || isLoading.edit">Terapkan perubahan</button>
