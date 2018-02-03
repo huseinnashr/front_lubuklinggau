@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { CategoryService, PostService } from '../../services/index';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { Category } from '../../models/index';
+import { TextEditorComponent } from '../text-editor/text-editor.component';
+import { Quill } from 'quill';
 
 @Component({
   selector: 'app-tambah-post-page',
@@ -16,9 +18,10 @@ export class TambahPostPageComponent implements OnInit, OnDestroy {
     Validators.required,
     Validators.minLength(15),
   ]);
+
   category: string;
   categories: Category[];
-  description: string;
+  quill: Quill;
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(
@@ -37,14 +40,25 @@ export class TambahPostPageComponent implements OnInit, OnDestroy {
     );
   }
 
+  onTextEditorCreated($event: Quill){
+    this.quill = $event;
+  }
+
+  isQuillEmpty(){
+    return this.quill.getContents().ops[0].insert == '\n' && this.quill.getLength() < 2;
+  }
+
   onTambahPost(){
     this.pService.addPost(
-      this.titleFormControl.value, this.category, this.description
+      this.titleFormControl.value, this.category, JSON.stringify(this.quill.getContents())
     )
     .takeUntil(this.ngUnsubscribe)
     .subscribe(
       (postId) => {
         if (postId > 0){
+          this.titleFormControl.reset();
+          this.category = null;
+          this.quill.setContents(null);
           this.navigator.navigate([`/post/${postId}`]);
         }
       },
@@ -52,14 +66,14 @@ export class TambahPostPageComponent implements OnInit, OnDestroy {
         console.log('Error tambah post');
       }
     );
-
   }
+  
   ngOnDestroy(){
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
 
   canDeactivate(){
-    return !(this.titleFormControl.dirty || this.category != null || this.description != null);
+    return !this.titleFormControl.dirty && this.category == null && this.isQuillEmpty();
   }
 }

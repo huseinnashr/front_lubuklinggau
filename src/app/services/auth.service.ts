@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material';
 import { Reply } from '../models/Post';
 import { Post, USER_TYPE } from '../models/index';
 import { CurrentUser } from '../models/User';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class AuthService {
@@ -97,6 +98,16 @@ export class AuthService {
     const options = new RequestOptions({headers: headers});
     options.headers.set('x-access-token', this.token);
     return options;
+  }
+
+  getMultipartHeader(){
+    const headers = new Headers({'x-access-token': this.token});
+    const options = new RequestOptions({headers: headers});
+    return options;
+  }
+
+  getMultipartHeader_(){
+    return new HttpHeaders({'x-access-token': this.token});
   }
 
   hasPostAccess(post: Post){

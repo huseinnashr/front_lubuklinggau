@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
@@ -8,6 +8,8 @@ import { Post } from '../../models/Post';
 import { CategoryService } from '../../services/index';
 import { Subject } from 'rxjs';
 import { Category } from '../../models/index';
+import { TextEditorComponent } from '../text-editor/text-editor.component';
+import { Quill } from 'quill';
 
 @Component({
   selector: 'app-edit-post-page',
@@ -22,8 +24,8 @@ export class EditPostPageComponent implements OnInit, OnDestroy {
   ]);
   
   category: string;
-  description;
   categories: Category[];
+  quill: Quill;
 
   post: Post;
   private ngUnsubscribe: Subject<any> = new Subject();
@@ -47,7 +49,6 @@ export class EditPostPageComponent implements OnInit, OnDestroy {
       this.post = post;    
       this.titleFormControl.setValue(this.post.title);
       this.category = this.post.categoryId.toString();
-      this.description = this.post.description;
     });
     this.cService.getCategories()
     .finally(() => { this.isLoading.post = false; })
@@ -59,10 +60,15 @@ export class EditPostPageComponent implements OnInit, OnDestroy {
     );
   }
 
+  onTextEditorCreated($event: Quill){
+    this.quill = $event;
+    this.quill.setContents(JSON.parse(this.post.description));
+  }
+
   onEditPost(){
     this.post.title = this.titleFormControl.value;
     this.post.categoryId = +this.category;
-    this.post.description = this.description;
+    this.post.description = JSON.stringify(this.quill.getContents());
     this.isLoading.edit = true;
     this.pService.updatePost(this.post)
     .finally(() => { this.isLoading.edit = false })

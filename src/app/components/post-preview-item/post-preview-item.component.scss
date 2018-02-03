@@ -5,7 +5,7 @@
   grid-template-areas: 
     "title title icon" 
     "author info info";
-  grid-template-columns: 100px auto auto;
+  grid-template-columns: auto auto auto;
   border: 1px solid lightgrey;
   background-color: white;
 }
@@ -21,6 +21,7 @@
 }
 .author {
   grid-area: author;
+  margin-right: 8px;
 }
 
 .infoContainer {

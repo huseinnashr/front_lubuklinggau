@@ -4,6 +4,7 @@ import { Post } from '../../models/Post';
 import { PostService } from '../../services/post.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
+import { Quill } from 'quill';
 
 @Component({
   selector: 'app-tambah-jawaban-page',
@@ -12,14 +13,10 @@ import { Subject } from 'rxjs';
 })
 export class TambahJawabanPageComponent implements OnInit, OnDestroy {
 
-  jawabanFormControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(15),
-  ]);
-
   post: Post;
   private ngUnsubscribe: Subject<any> = new Subject();
   public isLoading = { post: true, add: false }
+  quill: Quill;
 
   constructor(private pService: PostService, private navigator: Router, private route: ActivatedRoute) { }
   
@@ -36,10 +33,14 @@ export class TambahJawabanPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  onTextEditorCreated($event: Quill){
+    this.quill = $event;
+  }
+
   onTambahJawaban(){
     this.isLoading.add = true;
     this.pService.addReply(
-      this.jawabanFormControl.value, this.post)
+      JSON.stringify(this.quill.getContents()), this.post)
       .finally(() => { this.isLoading.add = false; })
       .takeUntil(this.ngUnsubscribe)
       .subscribe(

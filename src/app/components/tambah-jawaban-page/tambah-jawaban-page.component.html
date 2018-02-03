@@ -1,19 +1,14 @@
 <div class="mat-display-1" style="margin-bottom:16px">Tambah Jawaban</div>
-<mat-card>
+<mat-card style="margin-bottom: 28px">
   <mat-progress-bar mode="query" *ngIf="isLoading.post" style="margin-bottom:16px"></mat-progress-bar>
   <span class="add-jawaban-container" *ngIf="!isLoading.post">
     <div class="title mat-title">
       {{post?.title}}
-    </div>
-    <mat-form-field class="jawaban">
-      <textarea [formControl]="jawabanFormControl" matInput placeholder="Jawaban" matTextareaAutosize matAutosizeMinRows="10" required></textarea>
-      <mat-error *ngIf="jawabanFormControl.hasError('required') || jawabanFormControl.hasError('minlength')">
-          Jawaban <strong>diperlukan</strong> dengan panjang minimal 15 karakter
-      </mat-error>
-    </mat-form-field>
+    </div>     
+    <text-editor class="jawaban" [bounds]="p" placeholder="Tambahkan jawaban..." (onCreated)="onTextEditorCreated($event)"></text-editor>
   </span>
   <div class="add-btn-container">
-      <button mat-raised-button color="primary" (click)="onTambahJawaban()" [disabled]="!jawabanFormControl.valid">Tambah</button>
+      <button mat-raised-button color="primary" (click)="onTambahJawaban()">Tambah</button>
   </div>
   <mat-progress-bar mode="query" *ngIf="isLoading.add" style="margin-top:16px"></mat-progress-bar>
 </mat-card>
