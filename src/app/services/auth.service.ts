@@ -100,6 +100,13 @@ export class AuthService {
     return options;
   }
 
+  getHeader_(){
+    return new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      'x-access-token': this.token,
+    });
+  }
+
   getMultipartHeader(){
     const headers = new Headers({'x-access-token': this.token});
     const options = new RequestOptions({headers: headers});

@@ -79,7 +79,6 @@ export class TextEditorComponent{
   
     const cursor = this.quill.getSelection().index;
     const line = this.quill.getLine(cursor + 1);
-    console.log(line);
 
     imageInput.addEventListener('change', () => {
       this.pService.uploadImage(imageInput.files)

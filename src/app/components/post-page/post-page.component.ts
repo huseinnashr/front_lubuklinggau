@@ -48,6 +48,7 @@ export class PostPageComponent implements OnInit, OnDestroy {
 
   search(){
     let query = {};
+
     if (this.req == "Belum Dijawab") {
       if (this.aService.getCurrentUser() == null) {
         this.navigator.navigate(['/404']);
@@ -78,6 +79,14 @@ export class PostPageComponent implements OnInit, OnDestroy {
         req: this.req, size: this.query.size, offset: this.query.page * this.query.size
       };
     }
+
+    else if (this.req == "Belum Disetujui") {
+      if (this.aService.getCurrentUser() == null) {
+        this.navigator.navigate(['/404']);
+      } else {
+        query = { req: 'terbaru', approved: false, offset: this.query.page * this.query.size };
+      }
+    } 
     
     this.pService.getPosts(query)
     .finally(() => { this.isLoading = false })

@@ -13,25 +13,30 @@ import { USER_TYPE } from '../../models/index';
 export class UtamaPageComponent implements OnInit, OnDestroy {
 
   public posts: Post[];
+  public needApprovalPost: Post[];
   public customizedPost: Post[];
   public followedPost: Post[];
   public customizedFilter;
   public followedPostFilter;
-  public isLoading = { post: true, customizedPost: true, followedPost: true };
+  public isLoading = { post: true, customizedPost: true, followedPost: true, needApprovalPost: true };
 
   constructor(private pService: PostService, private aService: AuthService) { }
   private ngUnsubscribe: Subject<any> = new Subject();
 
   ngOnInit() {    
-    this.pService.getPosts({req: 'terbaru', size: 5})
-    .finally(() => { this.isLoading.post = false })
-    .takeUntil(this.ngUnsubscribe)
-    .subscribe(
-      (result) => {
-        if(result)
-          this.posts = result.rows;
-      },
-    )
+
+    if (this.isKominfo()){
+      this.pService.getPosts({ approved: false }, false)
+      .finally(() => { this.isLoading.needApprovalPost = false })
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(
+        (result) => {
+          if(result)
+            this.needApprovalPost = result.rows;
+        },
+      )
+    }
+
     if (this.isAdmin()) {
       this.customizedFilter = { req: 'terbaru', size: 5, isAnswered: false, dinasId: this.aService.getCurrentUser().dinas.id };
     } else if (this.canPost()) {
@@ -62,7 +67,20 @@ export class UtamaPageComponent implements OnInit, OnDestroy {
         },
       )
     }
-    
+
+    this.pService.getPosts({req: 'terbaru', size: 5})
+    .finally(() => { this.isLoading.post = false })
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe(
+      (result) => {
+        if(result)
+          this.posts = result.rows;
+      },
+    )
+  }
+
+  isKominfo(){
+    return (this.isAdmin() && this.aService.getCurrentUser().dinas.id == 1);
   }
 
   isAdmin(){

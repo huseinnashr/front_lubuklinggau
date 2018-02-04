@@ -23,7 +23,9 @@
 				<!-- <mat-icon>flag</mat-icon> 
 				<div class="mat-body-1">Lapor Post yang mengandung SARA, bully, offensive dan tidak sesuai aturan</div> -->
 				<mat-icon>settings</mat-icon> 
-				<div class="mat-body-1">Edit Post / jawaban</div>
+        <div class="mat-body-1">Edit Post / jawaban</div>
+        <mat-icon *ngIf="isAdmin()">gavel</mat-icon> 
+				<div class="mat-body-1" *ngIf="isAdmin()">Setujui / tarik post</div>
 				<mat-icon *ngIf="isAdmin()">import_export</mat-icon> 
 				<div class="mat-body-1" *ngIf="isAdmin()">Disposisi / batalkan disposisi Post</div>
 				<mat-icon>delete_forever</mat-icon> 

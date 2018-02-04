@@ -1,15 +1,16 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { MatChipInputEvent } from '@angular/material';
+import { MatChipInputEvent, MatDialog } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from '../../services/post.service';
 import { Post } from '../../models/Post';
-import { CategoryService } from '../../services/index';
+import { CategoryService, AuthService } from '../../services/index';
 import { Subject } from 'rxjs';
-import { Category } from '../../models/index';
+import { Category, USER_TYPE } from '../../models/index';
 import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { Quill } from 'quill';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-edit-post-page',
@@ -35,7 +36,9 @@ export class EditPostPageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private navigator: Router,
     private pService: PostService,
-    public cService: CategoryService
+    public cService: CategoryService,
+    private aService: AuthService,
+    private dialog: MatDialog,
   ) { }
   
   ngOnInit() {
@@ -66,6 +69,27 @@ export class EditPostPageComponent implements OnInit, OnDestroy {
   }
 
   onEditPost(){
+    const isKominfo = this.aService.getCurrentUser().usertype == USER_TYPE.ADMIN 
+      && this.aService.getCurrentUser().dinas.id == 1;
+    
+    if (isKominfo){
+      this.editPost(isKominfo);
+    } else {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        data: { description: `Post yang diedit akan ditinjau kembali sebelum ditampilkan!`, action: 'Yakin' },
+      });
+  
+      dialogRef.afterClosed()
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(result => {
+        if (result) {
+          this.editPost(isKominfo);
+        }
+      });
+    }
+  }
+
+  editPost(isKominfo: boolean){
     this.post.title = this.titleFormControl.value;
     this.post.categoryId = +this.category;
     this.post.description = JSON.stringify(this.quill.getContents());
@@ -75,7 +99,11 @@ export class EditPostPageComponent implements OnInit, OnDestroy {
     .takeUntil(this.ngUnsubscribe)
     .subscribe((updated) => {
       if (updated){
-        this.navigator.navigate([`/post/${this.post.id}`]);
+        if (isKominfo){
+          this.navigator.navigate([`/post/${this.post.id}`]);
+        } else {
+          this.navigator.navigate(['/']);
+        }
       }
     });
   }

@@ -22,7 +22,7 @@ export class PostToolbarComponent implements OnDestroy{
 
   canEdit: boolean;
   private ngUnsubscribe: Subject<any> = new Subject();
-  public isLoading = { delete: false, follow: false };
+  public isLoading = { delete: false, follow: false, approve: false };
 
   getCanEdit(){
     if (this.aService.getCurrentUser() == null) return false;
@@ -77,6 +77,16 @@ export class PostToolbarComponent implements OnDestroy{
         data: { ids: this.post.follower },
       });
     }
+  }
+
+  onApprove(){
+    this.isLoading.approve = true;
+    this.pService.approve(this.post.id, !this.post.approved)
+    .finally(() => { this.isLoading.approve = false })
+    .takeUntil(this.ngUnsubscribe)
+    .subscribe((res) => {
+      this.post.approved = res;
+    });
   }
 
   onDelete(){

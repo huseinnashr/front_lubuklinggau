@@ -20,7 +20,7 @@ export class PostService {
     public dialog: MatDialog,
   ) { }
 
-  handleError(err: HttpErrorResponse, action: String): Observable<any> {
+  handleError(err: any, action: String): Observable<any> {
     if (err instanceof Error){
       console.log(err);
     } else if (err.error instanceof Error) {
@@ -76,9 +76,23 @@ export class PostService {
     .takeUntil(dialogRef.afterClosed().first());
   }
 
+  approve(postId, approved) : Observable<boolean>{
+    return this.http_.post(
+      `${CONFIG.API_ADDRESS}/post/${postId}/approve`,
+      { approved },
+      { headers: this.aService.getHeader_() }
+    )
+    .map((event: any): boolean => {
+      this.snackBar.open(event.message, null, { duration: 3000 });
+      return event.approved;
+    })
+    .catch((error) => {
+      return this.handleError(error, 'Post Visibility');
+    })
+  }
+
   getPosts(filters, showSnackbar = true): Observable<{rows: Post[], count: number}> {
-    const headers = new Headers();
-    const options = new RequestOptions({headers: headers});
+    const options = this.aService.getHeader();
     options.headers.set('filters', JSON.stringify(filters));
     return this.http.get(`${CONFIG.API_ADDRESS}/post/`, options)
     .map((response: Response): { rows: Post[], count: number } => {
@@ -120,7 +134,7 @@ export class PostService {
   }
 
   getPostById(id): Observable<Post> {
-    return this.http.get(`${CONFIG.API_ADDRESS}/post/${id}`)
+    return this.http.get(`${CONFIG.API_ADDRESS}/post/${id}`, this.aService.getHeader())
     .map((response: Response): Post => {
         let post = response.json();
         if (post) {

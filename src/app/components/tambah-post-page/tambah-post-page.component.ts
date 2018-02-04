@@ -59,7 +59,8 @@ export class TambahPostPageComponent implements OnInit, OnDestroy {
           this.titleFormControl.reset();
           this.category = null;
           this.quill.setContents(null);
-          this.navigator.navigate([`/post/${postId}`]);
+          //this.navigator.navigate([`/post/${postId}`]);
+          this.navigator.navigate(['/']);
         }
       },
       (err) => {

@@ -1,5 +1,5 @@
 export interface Post {
-  id: number,
+  id: string,
   title: string,
   authorId: number,
   author: { id: number, name: string },
@@ -13,6 +13,7 @@ export interface Post {
   createdAt: string,
   updatedAt: string,
   description: string,
+  approved: boolean,
 }
 
 export interface PostToolbarData {
@@ -23,6 +24,7 @@ export interface PostToolbarData {
   isFollowed: boolean;
   isAnswered: boolean;
   follower: { id: number }[],
+  approved: boolean,
 }
 
 export interface Reply {
